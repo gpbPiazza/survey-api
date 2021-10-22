@@ -103,7 +103,10 @@ describe('SignUp Controller', () => {
         passwordConfirmation: 'invalid_email@mail.com'
       }
     }
-    jest.spyOn(emailValidator, 'isValid').mockReturnValueOnce(false)
+
+
+
+    		jest.spyOn(emailValidator, 'isValid').mockReturnValueOnce(false);
 
     const httpResponse = singUpController.handle(httpRequest)
 
