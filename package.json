@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --passWithNoTests",
-		"testWatch": "jest --passWithNoTests --watch"
+    "testWatch": "jest --passWithNoTests --watch"
   },
   "keywords": [],
   "author": "",
