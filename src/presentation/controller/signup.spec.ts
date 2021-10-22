@@ -116,6 +116,23 @@ describe('SignUp Controller', () => {
     expect(httpResponse.body).toEqual(new InvalidParamError('email'))
   })
 
+  test('Should return 400 if password confirmation fails', () => {
+    const { singUpController } = makeSignUpController()
+
+    const httpRequest = {
+      body: {
+        name: 'any_name',
+        email: 'any_email_invalid',
+        password: 'any_password',
+        passwordConfirmation: 'any_password_invalid'
+      }
+    }
+    const httpResponse = singUpController.handle(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new InvalidParamError('passwordConfirmation'))
+  })
+
   test('Should return 500 if EmailValidator throws', () => {
     const { singUpController, emailValidator } = makeSignUpController()
 
