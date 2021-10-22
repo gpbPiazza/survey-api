@@ -7,15 +7,30 @@ interface MakeTypes {
   emailValidator: EmailValidator
 }
 
-const makeSignUpController = (): MakeTypes => {
+const makeEmailValidator = (): EmailValidator => {
   class EmailValidatorTest implements EmailValidator {
     isValid (email: string): boolean {
       return true
     }
   }
 
-  const emailValidator = new EmailValidatorTest()
+  return new EmailValidatorTest()
+}
+
+const makeEmailValidatorWithError = (): EmailValidator => {
+  class EmailValidatorTest implements EmailValidator {
+    isValid (email: string): boolean {
+      throw new Error()
+    }
+  }
+  return new EmailValidatorTest()
+}
+
+const makeSignUpController = (): MakeTypes => {
+  const emailValidator = makeEmailValidator()
+
   const singUpController = new SignUpController(emailValidator)
+
   return {
     singUpController,
     emailValidator
@@ -130,13 +145,7 @@ describe('SignUp Controller', () => {
   })
 
   test('Should return 500 if EmailValidator throws', () => {
-    class EmailValidatorTest implements EmailValidator {
-      isValid (email: string): boolean {
-        throw new Error()
-      }
-    }
-    const emailValidator = new EmailValidatorTest()
-
+    const emailValidator = makeEmailValidatorWithError()
     const singUpController = new SignUpController(emailValidator)
 
     const httpRequest = {
