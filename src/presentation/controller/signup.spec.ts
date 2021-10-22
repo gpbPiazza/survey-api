@@ -116,24 +116,6 @@ describe('SignUp Controller', () => {
     expect(httpResponse.body).toEqual(new InvalidParamError('email'))
   })
 
-  test('Should call EmailValidator with correct email', () => {
-    const { singUpController, emailValidator } = makeSignUpController()
-
-    const httpRequest = {
-      body: {
-        name: 'any_name',
-        email: 'any_email@valid.com.br',
-        password: 'any_password',
-        passwordConfirmation: 'any_password'
-      }
-    }
-    const isValidSpy = jest.spyOn(emailValidator, 'isValid')
-
-    singUpController.handle(httpRequest)
-
-    expect(isValidSpy).toHaveBeenCalledWith('any_email@valid.com.br')
-  })
-
   test('Should return 500 if EmailValidator throws', () => {
     const { singUpController, emailValidator } = makeSignUpController()
 
@@ -152,5 +134,23 @@ describe('SignUp Controller', () => {
 
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError())
+  })
+
+  test('Should call EmailValidator with correct email', () => {
+    const { singUpController, emailValidator } = makeSignUpController()
+
+    const httpRequest = {
+      body: {
+        name: 'any_name',
+        email: 'any_email@valid.com.br',
+        password: 'any_password',
+        passwordConfirmation: 'any_password'
+      }
+    }
+    const isValidSpy = jest.spyOn(emailValidator, 'isValid')
+
+    singUpController.handle(httpRequest)
+
+    expect(isValidSpy).toHaveBeenCalledWith('any_email@valid.com.br')
   })
 })
