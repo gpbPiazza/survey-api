@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   roots: ['<rootDir>/src'],
   collectCoverage: false,
   collectCoverageFrom: [
@@ -11,5 +11,4 @@ export default {
   transform: {
     '.+\\.ts$': 'ts-jest'
   }
-
 }
