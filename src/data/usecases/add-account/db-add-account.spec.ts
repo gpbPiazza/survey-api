@@ -113,4 +113,25 @@ describe('DbAddAccount Usecase', () => {
 
     await expect(promise).rejects.toThrow()
   })
+
+  test('Should return an Account on success', async () => {
+    const { dbAddAccount } = makeDbAddAccount()
+
+    const accountData = {
+      name: 'valid_name',
+      email: 'valid_email',
+      password: 'valid_password'
+    }
+
+    const account = await dbAddAccount.add(accountData)
+
+    const expectedAccount = {
+      id: 'valid_id',
+      name: 'valid_name',
+      email: 'valid_email',
+      password: 'hashed_password'
+    }
+
+    expect(account).toStrictEqual(expectedAccount)
+  })
 })
