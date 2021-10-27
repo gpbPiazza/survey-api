@@ -1,13 +1,9 @@
-import { Encrypter } from './db-add-account-protocols'
+import { Account, AddAccountModel, Encrypter } from './db-add-account-protocols'
 import { DbAddAccount } from './db-add-account'
-
-interface MakeTypes {
-  dbAddAccount: DbAddAccount
-  encrypter: Encrypter
-}
+import { AddAccountRepository } from '../../protocols/add-account-repository'
 
 const makeEncrypter = (): Encrypter => {
-  class Encrypter {
+  class Encrypter implements Encrypter {
     async encrypt (value: string): Promise<string> {
       return await new Promise(resolve => resolve('hashed_password'))
     }
@@ -16,12 +12,35 @@ const makeEncrypter = (): Encrypter => {
   return new Encrypter()
 }
 
+const makeAddAccountRepository = (): AddAccountRepository => {
+  class AddAccountRepository implements AddAccountRepository {
+    async add (account: AddAccountModel): Promise<Account> {
+      const fakeAccount = {
+        id: 'valid_id',
+        name: 'valid_name',
+        email: 'valid_email',
+        password: 'hashed_password'
+      }
+      return await new Promise(resolve => resolve(fakeAccount))
+    }
+  }
+  return new AddAccountRepository()
+}
+
+interface MakeTypes {
+  dbAddAccount: DbAddAccount
+  encrypter: Encrypter
+  addAccountRepository: AddAccountRepository
+}
+
 const makeDbAddAccount = (): MakeTypes => {
   const encrypter = makeEncrypter()
-  const dbAddAccount = new DbAddAccount(encrypter)
+  const addAccountRepository = makeAddAccountRepository()
+  const dbAddAccount = new DbAddAccount(encrypter, addAccountRepository)
   return {
     encrypter,
-    dbAddAccount
+    dbAddAccount,
+    addAccountRepository
   }
 }
 
@@ -55,5 +74,27 @@ describe('DbAddAccount Usecase', () => {
     const promise = dbAddAccount.add(accountData)
 
     await expect(promise).rejects.toThrow()
+  })
+
+  test('Should call AddAccountRepository if correct values', async () => {
+    const { addAccountRepository, dbAddAccount } = makeDbAddAccount()
+
+    const addAccountRepositorySpy = jest.spyOn(addAccountRepository, 'add')
+
+    const accountData = {
+      name: 'valid_name',
+      email: 'valid_email',
+      password: 'valid_password'
+    }
+
+    await dbAddAccount.add(accountData)
+
+    const accountWithHashedPassword = {
+      name: 'valid_name',
+      email: 'valid_email',
+      password: 'hashed_password'
+    }
+
+    expect(addAccountRepositorySpy).toHaveBeenLastCalledWith(accountWithHashedPassword)
   })
 })
