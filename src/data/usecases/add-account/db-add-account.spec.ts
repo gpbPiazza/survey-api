@@ -97,4 +97,20 @@ describe('DbAddAccount Usecase', () => {
 
     expect(addAccountRepositorySpy).toHaveBeenLastCalledWith(accountWithHashedPassword)
   })
+
+  test('Should throw if AddAccountRepository throws', async () => {
+    const { addAccountRepository, dbAddAccount } = makeDbAddAccount()
+
+    jest.spyOn(addAccountRepository, 'add').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+
+    const accountData = {
+      name: 'valid_name',
+      email: 'valid_email',
+      password: 'valid_password'
+    }
+
+    const promise = dbAddAccount.add(accountData)
+
+    await expect(promise).rejects.toThrow()
+  })
 })
