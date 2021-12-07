@@ -7,10 +7,15 @@ jest.mock('bcrypt', () => ({
   }
 }))
 
+const salt = 12
+
+const makeBcryptAdapter = (): BcryptAdapter => {
+  return new BcryptAdapter(salt)
+}
+
 describe('Bcrypt Adapter', () => {
   test('Should call Bcrypt with correct values', async () => {
-    const salt = 12
-    const bcryptAdapter = new BcryptAdapter(salt)
+    const bcryptAdapter = makeBcryptAdapter()
 
     const hashSpy = jest.spyOn(bcrypt, 'hash')
 
@@ -20,8 +25,7 @@ describe('Bcrypt Adapter', () => {
   })
 
   test('Should return a hash on success', async () => {
-    const salt = 12
-    const bcryptAdapter = new BcryptAdapter(salt)
+    const bcryptAdapter = makeBcryptAdapter()
 
     const hash = await bcryptAdapter.encrypt('any_value')
 
