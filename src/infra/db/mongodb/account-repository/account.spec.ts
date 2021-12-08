@@ -10,8 +10,12 @@ describe('Account Mongo Repository', () => {
     await MongoHelper.disconnect()
   })
 
+  const makeAccountMongoRepository = (): AccountMongoRepository => {
+    return new AccountMongoRepository()
+  }
+
   test('should return an account on success ', async () => {
-    const accountMongoRepository = new AccountMongoRepository()
+    const accountMongoRepository = makeAccountMongoRepository()
 
     const account = await accountMongoRepository.add({
       name: 'any_name',
