@@ -14,7 +14,7 @@ const makeEncrypter = (): Encrypter => {
 
 const makeAddAccountRepository = (): AddAccountRepository => {
   class AddAccountRepository implements AddAccountRepository {
-    async add (account: AddAccountModel): Promise<Account> {
+    async add (accountData: AddAccountModel): Promise<Account> {
       const fakeAccount = {
         id: 'valid_id',
         name: 'valid_name',
