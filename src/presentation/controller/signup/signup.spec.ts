@@ -18,6 +18,11 @@ const makeEmailValidator = (): EmailValidator => {
   return new EmailValidatorTest()
 }
 
+const getExpectedBadRequestResponse = (error: Error): {name: string, message: string} => {
+  const { name, message } = error
+  return { name, message }
+}
+
 const makeAddAccount = (): AddAccount => {
   class AddAccountTest implements AddAccount {
     async add (account: AddAccountModel): Promise<Account> {
@@ -63,7 +68,7 @@ describe('SignUp Controller', () => {
     const httpResponse = await singUpController.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new MissingParamError('name'))
+    expect(httpResponse.body).toEqual(getExpectedBadRequestResponse(new MissingParamError('name')))
   })
 
   test('Should return 400 if no email is provided ', async () => {
@@ -80,7 +85,7 @@ describe('SignUp Controller', () => {
     const httpResponse = await singUpController.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new MissingParamError('email'))
+    expect(httpResponse.body).toEqual(getExpectedBadRequestResponse(new MissingParamError('email')))
   })
 
   test('Should return 400 if no password is provided ', async () => {
@@ -97,7 +102,7 @@ describe('SignUp Controller', () => {
     const httpResponse = await singUpController.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new MissingParamError('password'))
+    expect(httpResponse.body).toEqual(getExpectedBadRequestResponse(new MissingParamError('password')))
   })
 
   test('Should return 400 if no passwordConfirmation is provided ', async () => {
@@ -114,7 +119,7 @@ describe('SignUp Controller', () => {
     const httpResponse = await singUpController.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new MissingParamError('passwordConfirmation'))
+    expect(httpResponse.body).toEqual(getExpectedBadRequestResponse(new MissingParamError('passwordConfirmation')))
   })
 
   test('Should return 400 if invalid email is provided ', async () => {
@@ -134,7 +139,7 @@ describe('SignUp Controller', () => {
     const httpResponse = await singUpController.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new InvalidParamError('email'))
+    expect(httpResponse.body).toEqual(getExpectedBadRequestResponse(new InvalidParamError('email')))
   })
 
   test('Should return 400 if password confirmation fails', async () => {
@@ -151,7 +156,7 @@ describe('SignUp Controller', () => {
     const httpResponse = await singUpController.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new InvalidParamError('passwordConfirmation'))
+    expect(httpResponse.body).toEqual(getExpectedBadRequestResponse(new InvalidParamError('passwordConfirmation')))
   })
 
   test('Should return 500 if EmailValidator throws', async () => {
@@ -254,8 +259,7 @@ describe('SignUp Controller', () => {
     expect(httpResponse.body).toEqual({
       id: 'valid_id',
       name: 'valid_name',
-      email: 'valid_email',
-      password: 'valid_password'
+      email: 'valid_email'
     })
   })
 })
