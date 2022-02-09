@@ -46,4 +46,28 @@ describe('LogController Decorator', () => {
 
     expect(handleSpy).toHaveBeenCalledWith(httpRequest)
   })
+
+  test('Should return the same result of the controller wrapped', async () => {
+    const { logControllerDecorator } = makeLogControllerDecorator()
+
+    const httpRequest = {
+      body: {
+        name: 'any_name',
+        email: 'any_email',
+        password: 'any_password',
+        passwordConfirmation: 'any_password'
+      }
+    }
+
+    const httpResponseExpected: HttpResponse = {
+      statusCode: 200,
+      body: {
+        name: httpRequest.body.name
+      }
+    }
+
+    const httpResponse = await logControllerDecorator.handle(httpRequest)
+
+    expect(httpResponse).toEqual(httpResponseExpected)
+  })
 })
