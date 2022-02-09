@@ -13,11 +13,17 @@ class AnyController implements Controller {
   }
 }
 
+const makeLogControllerDecorator = (): {logControllerDecorator: LogControllerDecorator, anyController: AnyController} => {
+  const anyController = new AnyController()
+  const logControllerDecorator = new LogControllerDecorator(anyController)
+  return { logControllerDecorator, anyController }
+}
+
 describe('LogController Decorator', () => {
   test('Ensure Decoretor will call controller wrapped properly', async () => {
-    const anyController = new AnyController()
+    const { logControllerDecorator, anyController } = makeLogControllerDecorator()
+
     const handleSpy = jest.spyOn(anyController, 'handle')
-    const logControllerDecorator = new LogControllerDecorator(anyController)
 
     const httpRequest = {
       body: {
