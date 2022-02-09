@@ -2,8 +2,6 @@
 
 > _Objetivo: Desenvolver uma API seguindo os ensimanetos do livro Clean Architecture e utilizar TDD durante o desenvolvimento do projeto inteiro_.
 
-*Como rodar aplicação?* só seguir o este o readme
-
 ### 📋 Pré-requisitos
 
 Você precisa ter instalado:
@@ -26,11 +24,13 @@ Para instalar as dependências do projeto
 ### 🚇 Executando o projeto local
 
 Na raiz do projeto execute:
+
+Para iniciar seu banco local
 ```
   sudo service mongod start
 ```
-Para iniciar seu banco local
 
+Para iniciar o projeto
 ```
   npm run start
 ```
