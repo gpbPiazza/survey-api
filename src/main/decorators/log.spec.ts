@@ -1,20 +1,28 @@
 import { Controller, HttpRequest, HttpResponse } from '../../presentation/protocols'
 import { LogControllerDecorator } from './log'
 
-class AnyController implements Controller {
-  async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    const httpResponse: HttpResponse = {
-      statusCode: 200,
-      body: {
-        name: httpRequest.body.name
-      }
-    }
-    return await new Promise(resolve => resolve(httpResponse))
-  }
+interface MakeTYpes {
+  logControllerDecorator: LogControllerDecorator
+  anyController: Controller
 }
 
-const makeLogControllerDecorator = (): {logControllerDecorator: LogControllerDecorator, anyController: AnyController} => {
-  const anyController = new AnyController()
+const makeController = (): Controller => {
+  class AnyController implements Controller {
+    async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
+      const httpResponse: HttpResponse = {
+        statusCode: 200,
+        body: {
+          name: httpRequest.body.name
+        }
+      }
+      return await new Promise(resolve => resolve(httpResponse))
+    }
+  }
+  return new AnyController()
+}
+
+const makeLogControllerDecorator = (): MakeTYpes => {
+  const anyController = makeController()
   const logControllerDecorator = new LogControllerDecorator(anyController)
   return { logControllerDecorator, anyController }
 }
