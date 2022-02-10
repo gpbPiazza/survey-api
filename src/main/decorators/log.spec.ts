@@ -1,9 +1,13 @@
+import { LogErrorRepository } from '../../data/protocols/log-error-repository'
+import { ServerError } from '../../presentation/errors/server-error'
+import { serverError } from '../../presentation/helpers/http-helper'
 import { Controller, HttpRequest, HttpResponse } from '../../presentation/protocols'
 import { LogControllerDecorator } from './log'
 
 interface MakeTYpes {
   logControllerDecorator: LogControllerDecorator
   anyController: Controller
+  logErrorRepository: LogErrorRepository
 }
 
 const makeController = (): Controller => {
@@ -21,10 +25,20 @@ const makeController = (): Controller => {
   return new AnyController()
 }
 
+const makeLogErrorRepository = (): LogErrorRepository => {
+  class MockLogErrorRepository implements LogErrorRepository {
+    async log (stack: string): Promise<void> {
+      return await new Promise(resolve => resolve())
+    }
+  }
+  return new MockLogErrorRepository()
+}
+
 const makeLogControllerDecorator = (): MakeTYpes => {
   const anyController = makeController()
-  const logControllerDecorator = new LogControllerDecorator(anyController)
-  return { logControllerDecorator, anyController }
+  const logErrorRepository = makeLogErrorRepository()
+  const logControllerDecorator = new LogControllerDecorator(anyController, logErrorRepository)
+  return { logControllerDecorator, anyController, logErrorRepository }
 }
 
 describe('LogController Decorator', () => {
@@ -69,5 +83,40 @@ describe('LogController Decorator', () => {
     const httpResponse = await logControllerDecorator.handle(httpRequest)
 
     expect(httpResponse).toEqual(httpResponseExpected)
+  })
+  test('Should call LogErrorRepository with correct values when controller returns a server error', async () => {
+    const { logControllerDecorator, anyController, logErrorRepository } = makeLogControllerDecorator()
+
+    const mockStackError = 'any stack unexpected error'
+
+    const exptectedServerError = new ServerError(mockStackError)
+
+    const mockError = new Error()
+    mockError.stack = mockStackError
+
+    const mockHttpResponse = serverError(mockError)
+
+    const constrollerResponse: Promise<HttpResponse> = new Promise(resolve => resolve(mockHttpResponse))
+
+    const logErrorRepositoryResponse: Promise<void> = new Promise(resolve => resolve())
+
+    jest.spyOn(anyController, 'handle').mockReturnValueOnce(constrollerResponse)
+
+    const logSpy = jest.spyOn(logErrorRepository, 'log').mockReturnValueOnce(logErrorRepositoryResponse)
+
+    const httpRequest = {
+      body: {
+        name: 'any_name',
+        email: 'any_email',
+        password: 'any_password',
+        passwordConfirmation: 'any_password'
+      }
+    }
+
+    const httpResponse = await logControllerDecorator.handle(httpRequest)
+
+    expect(httpResponse.body).toEqual(exptectedServerError)
+
+    expect(logSpy).toHaveBeenCalledWith(mockStackError)
   })
 })
