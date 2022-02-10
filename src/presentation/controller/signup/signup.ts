@@ -30,7 +30,7 @@ export class SignUpController implements Controller {
       return ok({ name: account.name, email: account.email, id: account.id })
     } catch (error) {
       console.error(error)
-      return serverError()
+      return serverError(error)
     }
   }
 }
