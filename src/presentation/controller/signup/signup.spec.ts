@@ -2,6 +2,7 @@ import { MissingParamError, InvalidParamError, ServerError } from '../../errors'
 import { EmailValidator, AddAccount, AddAccountModel, Account, HttpRequest } from './signup-protocols'
 import { SignUpController } from './signup'
 import { ok, serverError, badRequest } from '../../helpers/http-helper'
+import { EmailValidatorAdapter } from '../../../utils/email-validator/email-validator-adapter'
 
 interface MakeTypes {
   singUpController: SignUpController
@@ -10,13 +11,7 @@ interface MakeTypes {
 }
 
 const makeEmailValidator = (): EmailValidator => {
-  class EmailValidatorTest implements EmailValidator {
-    isValid (email: string): boolean {
-      return true
-    }
-  }
-
-  return new EmailValidatorTest()
+  return new EmailValidatorAdapter()
 }
 
 const makeAddAccount = (): AddAccount => {
