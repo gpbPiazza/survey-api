@@ -26,7 +26,7 @@ const makeController = (): Controller => {
 
 const makeLogErrorRepository = (): LogErrorRepository => {
   class MockLogErrorRepository implements LogErrorRepository {
-    async log (stack: string): Promise<void> {
+    async logError (stack: string): Promise<void> {
       return await new Promise(resolve => resolve())
     }
   }
@@ -93,7 +93,7 @@ describe('LogController Decorator', () => {
 
     jest.spyOn(anyController, 'handle').mockReturnValueOnce(constrollerResponse)
 
-    const logSpy = jest.spyOn(logErrorRepository, 'log')
+    const logSpy = jest.spyOn(logErrorRepository, 'logError')
 
     const httpRequest = makeHttpRequest()
 
