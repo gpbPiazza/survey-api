@@ -3,24 +3,42 @@ import { badRequest, serverError } from '../../helpers/http-helper'
 import { InvalidParamError, MissingParamError } from '../../errors'
 import { HttpRequest } from '../../protocols'
 import { EmailValidator } from '../signup/signup-protocols'
-import { EmailValidatorAdapter } from '../../../utils/email-validator/email-validator-adapter'
+import { Authentication } from '../../../domain/usecases/authentication'
 
 interface MakeTypes {
   loginController: LoginController
   emailValidator: EmailValidator
+  authenticator: Authentication
 }
 
 const makeLoginController = (): MakeTypes => {
   const emailValidator = makeEmailValidator()
-  const loginController = new LoginController(emailValidator)
+  const authenticator = makeAuthentication()
+  const loginController = new LoginController(emailValidator, authenticator)
   return {
     loginController,
-    emailValidator: emailValidator
+    emailValidator: emailValidator,
+    authenticator
   }
 }
 
 const makeEmailValidator = (): EmailValidator => {
-  return new EmailValidatorAdapter()
+  class EmailValidatorStub implements EmailValidator {
+    isValid (email: string): boolean {
+      return true
+    }
+  }
+  return new EmailValidatorStub()
+}
+
+const makeAuthentication = (): Authentication => {
+  class AuthenticationStub implements Authentication {
+    async auth (email: string, password: string): Promise<string> {
+      return 'any_token'
+    }
+  }
+
+  return new AuthenticationStub()
 }
 
 const makeHttpRequest = (): HttpRequest => ({
@@ -103,5 +121,17 @@ describe('LoginController', () => {
     const httpResponse = await loginController.handle(httpRequest)
 
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  test('Should call authenticator with correct values', async () => {
+    const { loginController, authenticator } = makeLoginController()
+
+    const authSpy = jest.spyOn(authenticator, 'auth')
+
+    const httpRequest = makeHttpRequest()
+
+    await loginController.handle(httpRequest)
+
+    expect(authSpy).toHaveBeenCalledWith(httpRequest.body.email, httpRequest.body.password)
   })
 })
