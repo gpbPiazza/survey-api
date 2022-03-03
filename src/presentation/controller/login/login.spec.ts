@@ -67,7 +67,7 @@ describe('LoginController', () => {
     expect(emailSpyon).toHaveBeenCalledWith(httpRequest.body.email)
   })
 
-  test('Given password and email then should call EmailValidator with same body email', async () => {
+  test('Should call EmailValidator if email and password is provided', async () => {
     const { loginController, emailValidator } = makeLoginController()
 
     const emailSpyon = jest.spyOn(emailValidator, 'isValid')
@@ -79,7 +79,7 @@ describe('LoginController', () => {
     expect(emailSpyon).toHaveBeenCalledWith(httpRequest.body.email)
   })
 
-  test('Given invalid email then should return badrequest', async () => {
+  test('Should return badrequest if invalid email is provided', async () => {
     const { loginController, emailValidator } = makeLoginController()
 
     jest.spyOn(emailValidator, 'isValid').mockImplementation(() => false)
