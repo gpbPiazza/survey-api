@@ -144,4 +144,17 @@ describe('LoginController', () => {
 
     expect(httpResponse).toEqual(unauthorized())
   })
+
+  test('Should return serverError if authentication trhows', async () => {
+    const { loginController, authenticator } = makeLoginController()
+
+    jest.spyOn(authenticator, 'auth').mockImplementationOnce(async () =>
+      await new Promise((resolve, reject) => reject(new Error())))
+
+    const httpRequest = makeHttpRequest()
+
+    const httpResponse = await loginController.handle(httpRequest)
+
+    expect(httpResponse).toEqual(serverError(new Error()))
+  })
 })
