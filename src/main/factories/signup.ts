@@ -19,7 +19,7 @@ export const makeSignupController = (): Controller => {
 
   const emailValidator = new EmailValidatorAdapter()
 
-  const signUpController = new SignUpController(emailValidator, dbAddAccount)
+  const signUpController = new SignUpController(emailValidator, dbAddAccount, null)
 
   return new LogControllerDecorator(signUpController, logMongoRepository)
 }
