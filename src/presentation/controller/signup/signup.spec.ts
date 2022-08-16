@@ -66,54 +66,6 @@ const makeHttpRequest = (): HttpRequest => ({
 })
 
 describe('SignUp Controller', () => {
-  test('Should return 400 if no name is provided ', async () => {
-    const { singUpController } = makeSignUpController()
-
-    const httpRequest = makeHttpRequest()
-
-    delete httpRequest.body.name
-
-    const httpResponse = await singUpController.handle(httpRequest)
-
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('name')))
-  })
-
-  test('Should return 400 if no email is provided ', async () => {
-    const { singUpController } = makeSignUpController()
-
-    const httpRequest = makeHttpRequest()
-
-    delete httpRequest.body.email
-
-    const httpResponse = await singUpController.handle(httpRequest)
-
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('email')))
-  })
-
-  test('Should return 400 if no password is provided ', async () => {
-    const { singUpController } = makeSignUpController()
-
-    const httpRequest = makeHttpRequest()
-
-    delete httpRequest.body.password
-
-    const httpResponse = await singUpController.handle(httpRequest)
-
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('password')))
-  })
-
-  test('Should return 400 if no passwordConfirmation is provided ', async () => {
-    const { singUpController } = makeSignUpController()
-
-    const httpRequest = makeHttpRequest()
-
-    delete httpRequest.body.passwordConfirmation
-
-    const httpResponse = await singUpController.handle(httpRequest)
-
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('passwordConfirmation')))
-  })
-
   test('Should return 400 if invalid email is provided ', async () => {
     const { singUpController, emailValidator } = makeSignUpController()
 
