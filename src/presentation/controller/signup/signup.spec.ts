@@ -1,5 +1,5 @@
 import { MissingParamError, InvalidParamError, ServerError } from '../../errors'
-import { EmailValidator, AddAccount, AddAccountModel, Account, HttpRequest } from './signup-protocols'
+import { EmailValidator, AddAccount, AddAccountModel, Account, HttpRequest, Validation } from './signup-protocols'
 import { SignUpController } from './signup'
 import { ok, serverError, badRequest } from '../../helpers/http-helper'
 import { EmailValidatorAdapter } from '../../../utils/email-validator/email-validator-adapter'
@@ -8,6 +8,7 @@ interface MakeTypes {
   singUpController: SignUpController
   emailValidator: EmailValidator
   addAccount: AddAccount
+  validation: Validation
 }
 
 const makeEmailValidator = (): EmailValidator => {
@@ -31,16 +32,27 @@ const makeAddAccount = (): AddAccount => {
   return new AddAccountTest()
 }
 
+const makeValidation = (): Validation => {
+  class ValidationTest implements Validation {
+    validate (input: any): Error {
+      return null
+    }
+  }
+  return new ValidationTest()
+}
+
 const makeSignUpController = (): MakeTypes => {
   const emailValidator = makeEmailValidator()
   const addAccount = makeAddAccount()
+  const validation = makeValidation()
 
-  const singUpController = new SignUpController(emailValidator, addAccount)
+  const singUpController = new SignUpController(emailValidator, addAccount, validation)
 
   return {
     singUpController,
     emailValidator,
-    addAccount
+    addAccount,
+    validation
   }
 }
 
@@ -194,5 +206,17 @@ describe('SignUp Controller', () => {
       name: 'valid_name',
       email: 'valid_email'
     }))
+  })
+
+  test('Should call Validation with correct value', async () => {
+    const { singUpController, validation } = makeSignUpController()
+
+    const httpRequest = makeHttpRequest()
+
+    const validationSpy = jest.spyOn(validation, 'validate')
+
+    await singUpController.handle(httpRequest)
+
+    expect(validationSpy).toHaveBeenCalledWith(httpRequest.body)
   })
 })
