@@ -1,11 +1,10 @@
-import e from 'express'
-import { MissingParamError } from '../../errors'
+import { InvalidParamError, MissingParamError } from '../../errors'
 import { Validation } from './validation'
 import { ValidationComposite } from './validation-composite'
 
 interface MakeType {
   sut: ValidationComposite
-  validation: Validation
+  validations: Validation[]
 }
 
 const makeValidationStub = (): Validation => {
@@ -18,16 +17,16 @@ const makeValidationStub = (): Validation => {
 }
 
 const makeSut = (): MakeType => {
-  const validation = makeValidationStub()
-  const sut = new ValidationComposite([validation])
-  return { sut, validation }
+  const validations = [makeValidationStub(), makeValidationStub(), makeValidationStub()]
+  const sut = new ValidationComposite(validations)
+  return { sut, validations }
 }
 
 describe('Validation Composite', () => {
   test('should return error if any validations return error', () => {
-    const { sut, validation } = makeSut()
+    const { sut, validations } = makeSut()
 
-    jest.spyOn(validation, 'validate').mockImplementationOnce(() => new MissingParamError('field'))
+    jest.spyOn(validations[2], 'validate').mockImplementationOnce(() => new MissingParamError('field'))
 
     const err = sut.validate({ field: 'any_value' })
 
@@ -40,5 +39,16 @@ describe('Validation Composite', () => {
     const err = sut.validate({ field: 'any_value' })
 
     expect(err).toBeFalsy()
+  })
+
+  test('should return the first error if more then one validation fails', () => {
+    const { sut, validations } = makeSut()
+
+    jest.spyOn(validations[2], 'validate').mockImplementationOnce(() => new MissingParamError('field'))
+    jest.spyOn(validations[1], 'validate').mockImplementationOnce(() => new InvalidParamError('field'))
+
+    const err = sut.validate({ field: 'any_value' })
+
+    expect(err).toEqual(new InvalidParamError('field'))
   })
 })
