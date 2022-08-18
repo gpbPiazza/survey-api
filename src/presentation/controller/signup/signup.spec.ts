@@ -80,18 +80,6 @@ describe('SignUp Controller', () => {
     expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')))
   })
 
-  test('Should return 400 if password confirmation fails', async () => {
-    const { singUpController } = makeSignUpController()
-
-    const httpRequest = makeHttpRequest()
-
-    httpRequest.body.passwordConfirmation = 'password_confirmation_not_equal_to_password'
-
-    const httpResponse = await singUpController.handle(httpRequest)
-
-    expect(httpResponse).toEqual(badRequest(new InvalidParamError('passwordConfirmation')))
-  })
-
   test('Should return 500 if EmailValidator throws', async () => {
     const { singUpController, emailValidator } = makeSignUpController()
 
