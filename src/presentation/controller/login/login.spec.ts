@@ -1,32 +1,32 @@
 import { LoginController } from './login'
 import { badRequest, serverError, unauthorized, ok } from '../../helpers/http-helper'
-import { InvalidParamError, MissingParamError } from '../../errors'
-import { HttpRequest, EmailValidator, Authentication } from './login-protocols'
+import { MissingParamError } from '../../errors'
+import { HttpRequest, Authentication, Validation } from './login-protocols'
 
 interface MakeTypes {
   loginController: LoginController
-  emailValidator: EmailValidator
   authenticator: Authentication
+  validation: Validation
 }
 
 const makeLoginController = (): MakeTypes => {
-  const emailValidator = makeEmailValidator()
   const authenticator = makeAuthentication()
-  const loginController = new LoginController(emailValidator, authenticator)
+  const validation = makeValidation()
+  const loginController = new LoginController(validation, authenticator)
   return {
     loginController,
-    emailValidator: emailValidator,
-    authenticator
+    authenticator,
+    validation
   }
 }
 
-const makeEmailValidator = (): EmailValidator => {
-  class EmailValidatorStub implements EmailValidator {
-    isValid (email: string): boolean {
-      return true
+const makeValidation = (): Validation => {
+  class ValidationTest implements Validation {
+    validate (input: any): Error {
+      return null
     }
   }
-  return new EmailValidatorStub()
+  return new ValidationTest()
 }
 
 const makeAuthentication = (): Authentication => {
@@ -47,80 +47,6 @@ const makeHttpRequest = (): HttpRequest => ({
 })
 
 describe('LoginController', () => {
-  test('Should return badrequest if email is no provided', async () => {
-    const { loginController } = makeLoginController()
-
-    const httpRequest = makeHttpRequest()
-
-    delete httpRequest.body.email
-
-    const httpResponse = await loginController.handle(httpRequest)
-
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('email')))
-  })
-
-  test('Should return badrequest if password is no provided', async () => {
-    const { loginController } = makeLoginController()
-
-    const httpRequest = makeHttpRequest()
-
-    delete httpRequest.body.password
-
-    const httpResponse = await loginController.handle(httpRequest)
-
-    expect(httpResponse).toEqual(badRequest(new MissingParamError('password')))
-  })
-
-  test('Given password and email then should call EmailValidator with same body email', async () => {
-    const { loginController, emailValidator } = makeLoginController()
-
-    const emailSpyon = jest.spyOn(emailValidator, 'isValid')
-
-    const httpRequest = makeHttpRequest()
-
-    await loginController.handle(httpRequest)
-
-    expect(emailSpyon).toHaveBeenCalledWith(httpRequest.body.email)
-  })
-
-  test('Should call EmailValidator if email and password is provided', async () => {
-    const { loginController, emailValidator } = makeLoginController()
-
-    const emailSpyon = jest.spyOn(emailValidator, 'isValid')
-
-    const httpRequest = makeHttpRequest()
-
-    await loginController.handle(httpRequest)
-
-    expect(emailSpyon).toHaveBeenCalledWith(httpRequest.body.email)
-  })
-
-  test('Should return badrequest if invalid email is provided', async () => {
-    const { loginController, emailValidator } = makeLoginController()
-
-    jest.spyOn(emailValidator, 'isValid').mockImplementation(() => false)
-
-    const httpRequest = makeHttpRequest()
-
-    httpRequest.body.email = 'invalid_email@.com.br'
-
-    const httpResponse = await loginController.handle(httpRequest)
-
-    expect(httpResponse).toEqual(badRequest(new InvalidParamError('email')))
-  })
-
-  test('Should return serverError if emailValidator trhows', async () => {
-    const { loginController, emailValidator } = makeLoginController()
-
-    jest.spyOn(emailValidator, 'isValid').mockImplementationOnce(() => { throw new Error() })
-
-    const httpRequest = makeHttpRequest()
-
-    const httpResponse = await loginController.handle(httpRequest)
-
-    expect(httpResponse).toEqual(serverError(new Error()))
-  })
-
   test('Should call authenticator with correct values', async () => {
     const { loginController, authenticator } = makeLoginController()
 
@@ -166,5 +92,29 @@ describe('LoginController', () => {
     const httpResponse = await loginController.handle(httpRequest)
 
     expect(httpResponse).toEqual(ok({ accessToken: 'any_token' }))
+  })
+
+  test('Should call Validation with correct value', async () => {
+    const { loginController, validation } = makeLoginController()
+
+    const httpRequest = makeHttpRequest()
+
+    const validationSpy = jest.spyOn(validation, 'validate')
+
+    await loginController.handle(httpRequest)
+
+    expect(validationSpy).toHaveBeenCalledWith(httpRequest.body)
+  })
+
+  test('Should return 400 if Validation returns error', async () => {
+    const { loginController, validation } = makeLoginController()
+
+    const httpRequest = makeHttpRequest()
+
+    jest.spyOn(validation, 'validate').mockReturnValueOnce(new MissingParamError('any_field'))
+
+    const response = await loginController.handle(httpRequest)
+
+    expect(response).toEqual(badRequest(new MissingParamError('any_field')))
   })
 })
