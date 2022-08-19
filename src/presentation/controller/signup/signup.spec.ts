@@ -1,7 +1,7 @@
 import { MissingParamError, ServerError } from '../../errors'
 import { AddAccount, AddAccountModel, Account, HttpRequest, Validation } from './signup-protocols'
 import { SignUpController } from './signup'
-import { ok, serverError, badRequest } from '../../helpers/http-helper'
+import { ok, serverError, badRequest } from '../../helpers/http/http-helper'
 
 interface MakeTypes {
   singUpController: SignUpController
