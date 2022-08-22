@@ -1,5 +1,5 @@
 import { MissingParamError, ServerError } from '../../errors'
-import { AddAccount, AddAccountModel, Account, HttpRequest, Validation } from './signup-protocols'
+import { AddAccount, AddAccountModel, AccountModel, HttpRequest, Validation } from './signup-protocols'
 import { SignUpController } from './signup'
 import { ok, serverError, badRequest } from '../../helpers/http/http-helper'
 
@@ -11,7 +11,7 @@ interface MakeTypes {
 
 const makeAddAccount = (): AddAccount => {
   class AddAccountTest implements AddAccount {
-    async add (account: AddAccountModel): Promise<Account> {
+    async add (account: AddAccountModel): Promise<AccountModel> {
       const fakeAccount = {
         id: 'valid_id',
         name: 'valid_name',
