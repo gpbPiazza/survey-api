@@ -49,9 +49,10 @@ Execute:
 
 ## 📦 Documentação
 
-Em desenvolvimento
-Em breve link do diagrama da arquitetura
-Em breve swegger do projeto....
+[Diagrama de classes](https://drive.google.com/file/d/1Ph5pmn-KZJILFRX_DQYLz5iVHq3gcw2D/view?usp=sharing)
+
+Swegger do projeto WIP....
+Diagrama arquitetura do projeto WIP....
 
 ## 🎁 Melhorias?
 
