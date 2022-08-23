@@ -3,11 +3,13 @@ import { Authentication, AuthenticationModel } from '../../../domain/usecases/au
 import { LoadAccountByEmailRepository } from '../../protocols/db/load-account-by-email-repository'
 import { DBAuthentication } from './db-authentication'
 import { HashComparer } from '../../protocols/criptography/hash-comparer'
+import { TokenGenerator } from '../../protocols/criptography/token-generator'
 
 interface SutTypes {
   loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
   sut: Authentication
   hashComparerStub: HashComparer
+  tokenGeneratorStub: TokenGenerator
 }
 
 const makeFakeAccount = (): AccountModel => {
@@ -45,14 +47,25 @@ const makeHashComparerStub = (): HashComparer => {
   return new HashComparerStub()
 }
 
+const makeTokenGeneratorStub = (): TokenGenerator => {
+  class TokenGneratorStub implements TokenGenerator {
+    async generate (id: string): Promise<string> {
+      return await new Promise(resolve => resolve('access_token'))
+    }
+  }
+  return new TokenGneratorStub()
+}
+
 const makeSut = (): SutTypes => {
   const loadAccountByEmailRepositoryStub = makeLoadAccountRepositoryStub()
   const hashComparerStub = makeHashComparerStub()
-  const sut = new DBAuthentication(loadAccountByEmailRepositoryStub, hashComparerStub)
+  const tokenGeneratorStub = makeTokenGeneratorStub()
+  const sut = new DBAuthentication(loadAccountByEmailRepositoryStub, hashComparerStub, tokenGeneratorStub)
   return {
     loadAccountByEmailRepositoryStub,
     sut,
-    hashComparerStub
+    hashComparerStub,
+    tokenGeneratorStub
   }
 }
 
@@ -118,5 +131,17 @@ describe('DBAuthentication UseCase', () => {
     const accessToken = await sut.auth(authModel)
 
     expect(accessToken).toBeNull()
+  })
+
+  test('should call TokenGenerator witch correct id', async () => {
+    const { sut, tokenGeneratorStub } = makeSut()
+
+    const accountModel = makeFakeAccount()
+
+    const generateSpy = jest.spyOn(tokenGeneratorStub, 'generate')
+
+    await sut.auth(makeFakeAuthenticationModel())
+
+    expect(generateSpy).toHaveBeenCalledWith(accountModel.id)
   })
 })
