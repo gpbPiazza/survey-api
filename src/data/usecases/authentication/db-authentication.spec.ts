@@ -121,6 +121,7 @@ describe('DBAuthentication UseCase', () => {
 
     await expect(promise).rejects.toThrow()
   })
+
   test('should return null if HasCompare returns false', async () => {
     const { sut, hashComparerStub } = makeSut()
 
@@ -143,5 +144,15 @@ describe('DBAuthentication UseCase', () => {
     await sut.auth(makeFakeAuthenticationModel())
 
     expect(generateSpy).toHaveBeenCalledWith(accountModel.id)
+  })
+
+  test('should throw if TokenGenerator throws', async () => {
+    const { sut, tokenGeneratorStub } = makeSut()
+
+    jest.spyOn(tokenGeneratorStub, 'generate').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+
+    const promise = sut.auth(makeFakeAuthenticationModel())
+
+    await expect(promise).rejects.toThrow()
   })
 })

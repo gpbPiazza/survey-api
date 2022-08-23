@@ -7,7 +7,10 @@ export class DBAuthentication implements Authentication {
   private readonly hashComparer: HashComparer
   private readonly tokenGenerator: TokenGenerator
 
-  constructor (loadAccountByEmailRepository: LoadAccountByEmailRepository, hashComparer: HashComparer, tokenGenerator: TokenGenerator) {
+  constructor (
+    loadAccountByEmailRepository: LoadAccountByEmailRepository,
+    hashComparer: HashComparer,
+    tokenGenerator: TokenGenerator) {
     this.loadAccountByEmailRepository = loadAccountByEmailRepository
     this.hashComparer = hashComparer
     this.tokenGenerator = tokenGenerator
