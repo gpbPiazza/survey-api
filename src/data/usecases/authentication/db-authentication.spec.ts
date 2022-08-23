@@ -1,7 +1,6 @@
-import { rejects } from 'assert'
 import { AccountModel } from '../../../domain/models/account'
 import { Authentication, AuthenticationModel } from '../../../domain/usecases/authentication'
-import { LoadAccountByEmailRepository } from '../../protocols/load-account-by-email-repository'
+import { LoadAccountByEmailRepository } from '../../protocols/db/load-account-by-email-repository'
 import { DBAuthentication } from './db-authentication'
 
 interface SutTypes {
