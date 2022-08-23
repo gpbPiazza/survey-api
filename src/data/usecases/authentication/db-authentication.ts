@@ -9,8 +9,8 @@ export class DBAuthentication implements Authentication {
   }
 
   async auth (model: AuthenticationModel): Promise<string> {
-    const accountModel = await this.loadAccountByEmailRepository.load(model.email)
-    console.log(accountModel.id)
-    return await new Promise(resolve => resolve('zap'))
+    await this.loadAccountByEmailRepository.load(model.email)
+
+    return null
   }
 }
