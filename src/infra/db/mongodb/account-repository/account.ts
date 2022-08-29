@@ -17,6 +17,6 @@ export class AccountMongoRepository implements AddAccountRepository, LoadAccount
     const accountCollection = MongoHelper.getCollection('accounts')
 
     const result = await accountCollection.findOne({ email })
-    return MongoHelper.map(result)
+    return result && MongoHelper.map(result)
   }
 }

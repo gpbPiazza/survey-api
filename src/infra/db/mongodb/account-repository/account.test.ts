@@ -55,4 +55,18 @@ describe('Account Mongo Repository', () => {
     expect(account.password).toBe('valid_password')
     expect(account.id).toBeTruthy()
   })
+
+  test('should return null when loadByEmail when not find a user', async () => {
+    const accountMongoRepository = makeAccountMongoRepository()
+
+    await accountCollection.insertOne({
+      name: 'any_name',
+      email: 'any_email@gmail.com',
+      password: 'valid_password'
+    })
+
+    const account = await accountMongoRepository.loadByEmail('a_email_not_in_the_db@gmail.com')
+
+    expect(account).toBeFalsy()
+  })
 })
