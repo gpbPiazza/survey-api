@@ -17,7 +17,7 @@ describe('Login Routes', () => {
     await accountCollection.deleteMany(removeAll)
   })
   describe('POST / signup ', () => {
-    test('Should return an account on signup success', async () => {
+    test('should return http status 200 on signup', async () => {
       await request(app)
         .post('/api/signup')
         .send({
