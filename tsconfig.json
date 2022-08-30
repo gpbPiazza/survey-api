@@ -4,6 +4,12 @@
 		"module": "commonjs",
 		"target": "es2021",
 		"esModuleInterop": true,
-		"allowJs": true
-  }
+  },
+	"include": [
+		"./src"
+	],
+	"exclude": [
+		"**/*.spec.**",
+		"**/*.test.**"
+	]
 }
