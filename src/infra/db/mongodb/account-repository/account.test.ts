@@ -23,9 +23,9 @@ describe('Account Mongo Repository', () => {
   })
 
   test('should return an account on add success ', async () => {
-    const accountMongoRepository = makeAccountMongoRepository()
+    const sut = makeAccountMongoRepository()
 
-    const account = await accountMongoRepository.add({
+    const account = await sut.add({
       name: 'any_name',
       email: 'valid_email@teste.com.br',
       password: 'valid_password'
@@ -39,7 +39,7 @@ describe('Account Mongo Repository', () => {
   })
 
   test('should return an account on loadByEmail success ', async () => {
-    const accountMongoRepository = makeAccountMongoRepository()
+    const sut = makeAccountMongoRepository()
 
     await accountCollection.insertOne({
       name: 'any_name',
@@ -47,7 +47,7 @@ describe('Account Mongo Repository', () => {
       password: 'valid_password'
     })
 
-    const account = await accountMongoRepository.loadByEmail('any_email@gmail.com')
+    const account = await sut.loadByEmail('any_email@gmail.com')
 
     expect(account).toBeTruthy()
     expect(account.name).toBe('any_name')
@@ -57,7 +57,7 @@ describe('Account Mongo Repository', () => {
   })
 
   test('should return null when loadByEmail when not find a user', async () => {
-    const accountMongoRepository = makeAccountMongoRepository()
+    const sut = makeAccountMongoRepository()
 
     await accountCollection.insertOne({
       name: 'any_name',
@@ -65,8 +65,25 @@ describe('Account Mongo Repository', () => {
       password: 'valid_password'
     })
 
-    const account = await accountMongoRepository.loadByEmail('a_email_not_in_the_db@gmail.com')
+    const account = await sut.loadByEmail('a_email_not_in_the_db@gmail.com')
 
     expect(account).toBeFalsy()
+  })
+
+  test('should update the account accessToken on updateAccesToken with sucess', async () => {
+    const sut = makeAccountMongoRepository()
+
+    const res = await accountCollection.insertOne({
+      name: 'any_name',
+      email: 'any_email@gmail.com',
+      password: 'valid_password'
+    })
+
+    await sut.updateAccessToken(res.insertedId.toString(), 'any_token')
+
+    const account = await accountCollection.findOne({ _id: res.insertedId })
+
+    expect(account).toBeTruthy()
+    expect(account.accessToken).toBe('any_token')
   })
 })
