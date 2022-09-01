@@ -11,10 +11,3 @@ COPY ./package.json .
 # da aplicação ignorando as de dev
 RUN npm install --only=prod
 
-# Copia a pasta dist da aplicação para dentro do container
-COPY ./dist ./dist
-
-# expoem em qual porta este container vai rodar
-EXPOSE 5000
-
-CMD npm start
