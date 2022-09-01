@@ -1,0 +1,20 @@
+#instala imagem do node from dockerHube:na versão citada
+FROM node:12 
+
+# Seta pasta que vamos deixar a nossa aplicação dentro do container
+WORKDIR /usr/src/clean-api
+
+# Copia o package.json da aplicação dentro do da dockerimage
+COPY ./package.json .
+
+# Com package.json dentro do container podemos intalar as dependencias 
+# da aplicação ignorando as de dev
+RUN npm install --only=prod
+
+# Copia a pasta dist da aplicação para dentro do container
+COPY ./dist ./dist
+
+# expoem em qual porta este container vai rodar
+EXPOSE 5000
+
+CMD npm start
