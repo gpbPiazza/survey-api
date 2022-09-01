@@ -1,5 +1,5 @@
-import { InvalidParamError, MissingParamError } from '../../errors'
-import { Validation } from '../../protocols/validation'
+import { InvalidParamError, MissingParamError } from '../errors'
+import { Validation } from '../protocols/validation'
 import { ValidationComposite } from './validation-composite'
 
 interface MakeType {
