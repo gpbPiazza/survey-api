@@ -1,5 +1,13 @@
 import { MissingParamError, ServerError } from '../../errors'
-import { AddAccount, AddAccountModel, AccountModel, HttpRequest, Validation } from './signup-controller-protocols'
+import {
+  AddAccount,
+  AddAccountModel,
+  AccountModel,
+  HttpRequest,
+  Validation,
+  Authentication,
+  AuthenticationModel
+} from './signup-controller-protocols'
 import { SignUpController } from './signup-controller'
 import { ok, serverError, badRequest } from '../../helpers/http/http-helper'
 
@@ -7,6 +15,7 @@ interface MakeTypes {
   singUpController: SignUpController
   addAccount: AddAccount
   validation: Validation
+  authentication: Authentication
 }
 
 const makeAddAccount = (): AddAccount => {
@@ -38,13 +47,15 @@ const makeValidation = (): Validation => {
 const makeSignUpController = (): MakeTypes => {
   const addAccount = makeAddAccount()
   const validation = makeValidation()
+  const authentication = makeAuthentication()
 
-  const singUpController = new SignUpController(addAccount, validation)
+  const singUpController = new SignUpController(addAccount, validation, authentication)
 
   return {
     singUpController,
     addAccount,
-    validation
+    validation,
+    authentication
   }
 }
 
@@ -56,6 +67,16 @@ const makeHttpRequest = (): HttpRequest => ({
     passwordConfirmation: 'valid_password'
   }
 })
+
+const makeAuthentication = (): Authentication => {
+  class AuthenticationStub implements Authentication {
+    async auth (model: AuthenticationModel): Promise<string> {
+      return await new Promise(resolve => resolve('any_token'))
+    }
+  }
+
+  return new AuthenticationStub()
+}
 
 describe('SignUp Controller', () => {
   test('Should call CreateUser with correct values', async () => {
@@ -124,5 +145,17 @@ describe('SignUp Controller', () => {
     const response = await singUpController.handle(httpRequest)
 
     expect(response).toEqual(badRequest(new MissingParamError('any_field')))
+  })
+
+  test('Should call authenticator with correct values', async () => {
+    const { singUpController, authentication } = makeSignUpController()
+
+    const authSpy = jest.spyOn(authentication, 'auth')
+
+    const httpRequest = makeHttpRequest()
+
+    await singUpController.handle(httpRequest)
+
+    expect(authSpy).toHaveBeenCalledWith({ email: httpRequest.body.email, password: httpRequest.body.password })
   })
 })
