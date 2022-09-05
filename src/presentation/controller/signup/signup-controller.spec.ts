@@ -158,4 +158,16 @@ describe('SignUp Controller', () => {
 
     expect(authSpy).toHaveBeenCalledWith({ email: httpRequest.body.email, password: httpRequest.body.password })
   })
+  test('Should return serverError if authentication trhows', async () => {
+    const { singUpController, authentication } = makeSignUpController()
+
+    jest.spyOn(authentication, 'auth').mockImplementationOnce(async () =>
+      await new Promise((resolve, reject) => reject(new Error())))
+
+    const httpRequest = makeHttpRequest()
+
+    const httpResponse = await singUpController.handle(httpRequest)
+
+    expect(httpResponse).toEqual(serverError(new Error()))
+  })
 })
