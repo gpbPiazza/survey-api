@@ -37,7 +37,7 @@ const makeFakeAddAccountModel = (): AddAccountModel => {
 const makeLoadAccountRepositoryStub = (): LoadAccountByEmailRepository => {
   class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {
     async loadByEmail (email: string): Promise<AccountModel> {
-      return await new Promise(resolve => resolve(makeFakeAccount()))
+      return await new Promise(resolve => resolve(null))
     }
   }
   return new LoadAccountByEmailRepositoryStub()
@@ -133,23 +133,23 @@ describe('DbAddAccount Usecase', () => {
     expect(loadSpy).toHaveBeenCalledWith(addAccountModel.email)
   })
 
-  // test('should throw if LoadAccountByEmailRepository throws', async () => {
-  //   const { sut, loadAccountByEmailRepositoryStub } = makeDbAddAccount()
+  test('should throw if LoadAccountByEmailRepository throws', async () => {
+    const { dbAddAccount, loadAccountByEmailRepository } = makeDbAddAccount()
 
-  //   jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    jest.spyOn(loadAccountByEmailRepository, 'loadByEmail').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
 
-  //   const promise = sut.auth(makeFakeAuthenticationModel())
+    const promise = dbAddAccount.add(makeFakeAddAccountModel())
 
-  //   await expect(promise).rejects.toThrow()
-  // })
+    await expect(promise).rejects.toThrow()
+  })
 
-  // test('should return null if LoadAccountByEmailRepository returns null', async () => {
-  //   const { sut, loadAccountByEmailRepositoryStub } = makeDbAddAccount()
+  test('should return null if LoadAccountByEmailRepository returns null', async () => {
+    const { dbAddAccount, loadAccountByEmailRepository } = makeDbAddAccount()
 
-  //   jest.spyOn(loadAccountByEmailRepositoryStub, 'loadByEmail').mockReturnValueOnce(null)
+    jest.spyOn(loadAccountByEmailRepository, 'loadByEmail').mockReturnValueOnce(new Promise(resolve => resolve(makeFakeAccount())))
 
-  //   const accessToken = await sut.auth(makeFakeAuthenticationModel())
+    const account = await dbAddAccount.add(makeFakeAddAccountModel())
 
-  //   expect(accessToken).toBeNull()
-  // })
+    expect(account).toBeNull()
+  })
 })
