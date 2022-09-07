@@ -29,3 +29,10 @@ export const ok = (body: any): HttpResponse => ({
   statusCode: 200,
   body: body
 })
+
+export const forbbiden = ({ message, name }: Error): HttpResponse => {
+  return {
+    statusCode: 403,
+    body: { name, message }
+  }
+}
