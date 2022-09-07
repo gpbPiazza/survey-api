@@ -7,8 +7,7 @@ import { LogControllerDecorator } from '../../../decorators/log-controller-decor
 import { LogMongoRepository } from '../../../../infra/db/mongodb/log-repository/log-mongo-repository'
 import { makeSignupValidation } from './signup-validation-factory'
 import env from '../../../config/env'
-import { JwtAdapter } from '../../../../infra/criptography/jwt-adapter/jwt-adapter'
-import { DBAuthentication } from '../../../../data/usecases/authentication/db-authentication'
+import { makeDbAuthentication } from '../../usecases/db-authentication-factory'
 
 export const makeSignupController = (): Controller => {
   const encrypt = new BcryptAdapter(env.saltEncrypt)
@@ -19,11 +18,7 @@ export const makeSignupController = (): Controller => {
 
   const dbAddAccount = new DbAddAccount(encrypt, addAccountRepository)
 
-  const jwtAdabter = new JwtAdapter(env.jwtSecrect)
-
-  const dBAuthentication = new DBAuthentication(addAccountRepository, encrypt, jwtAdabter, addAccountRepository)
-
-  const signUpController = new SignUpController(dbAddAccount, makeSignupValidation(), dBAuthentication)
+  const signUpController = new SignUpController(dbAddAccount, makeSignupValidation(), makeDbAuthentication())
 
   return new LogControllerDecorator(signUpController, logMongoRepository)
 }
