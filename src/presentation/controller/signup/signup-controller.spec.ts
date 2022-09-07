@@ -116,11 +116,7 @@ describe('SignUp Controller', () => {
 
     const httpResponse = await singUpController.handle(httpRequest)
 
-    expect(httpResponse).toEqual(ok({
-      id: 'valid_id',
-      name: 'valid_name',
-      email: 'valid_email'
-    }))
+    expect(httpResponse).toEqual(ok({ accessToken: 'any_token' }))
   })
 
   test('Should call Validation with correct value', async () => {
