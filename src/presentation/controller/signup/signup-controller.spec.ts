@@ -1,4 +1,4 @@
-import { MissingParamError, ServerError } from '../../errors'
+import { EmailInUserError, MissingParamError, ServerError } from '../../errors'
 import {
   AddAccount,
   AddAccountModel,
@@ -9,7 +9,7 @@ import {
   AuthenticationModel
 } from './signup-controller-protocols'
 import { SignUpController } from './signup-controller'
-import { ok, serverError, badRequest } from '../../helpers/http/http-helper'
+import { ok, serverError, badRequest, forbbiden } from '../../helpers/http/http-helper'
 
 interface MakeTypes {
   singUpController: SignUpController
@@ -165,5 +165,17 @@ describe('SignUp Controller', () => {
     const httpResponse = await singUpController.handle(httpRequest)
 
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  test('Should return 403 if addAccount returns null', async () => {
+    const { singUpController, addAccount } = makeSignUpController()
+
+    jest.spyOn(addAccount, 'add').mockReturnValueOnce(new Promise(resolve => resolve(null)))
+
+    const httpRequest = makeHttpRequest()
+
+    const httpResponse = await singUpController.handle(httpRequest)
+
+    expect(httpResponse).toEqual(forbbiden(new EmailInUserError()))
   })
 })
