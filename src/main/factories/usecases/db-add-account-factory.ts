@@ -10,5 +10,5 @@ export const makeAddAccount = (): AddAccount => {
 
   const addAccountRepository = new AccountMongoRepository()
 
-  return new DbAddAccount(encrypt, addAccountRepository)
+  return new DbAddAccount(encrypt, addAccountRepository, addAccountRepository)
 }
