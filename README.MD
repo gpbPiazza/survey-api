@@ -51,20 +51,11 @@ Execute:
 
 [Diagrama de classes](https://drive.google.com/file/d/1Ph5pmn-KZJILFRX_DQYLz5iVHq3gcw2D/view?usp=sharing)
 
+[Arquitetura do projeto](./docs/ARCHITECTURE.MD)
+
 Swegger do projeto WIP....
 Diagrama arquitetura do projeto WIP....
 
-<!-- Domain - Onde ficam os casos de uso e as entidades.
-
-Data - Implementação dos casos de uso. Onde ficam as regras de negócio.
-
-Infra - Implementações que usam libs de terceiros
-
-Presentation - Onde preparamos os dados que serão "apresentados" pela view (no caso da API, a view é apenas um JSON ou XML)
-
-Validation - Onde fazemos validações
-
-Main - Onde fazemos a composição das classes -->
 
 ## 🎁 Melhorias?
 
