@@ -108,10 +108,10 @@ Também responsável por termos a implementação da comunicação ao mundo exte
 rsos da aplicação, além de possuir seus respectivos métodos apresentados na camada `/interfaces`.
 
 
-## Grau de dependência [WIP]
+## Layers [WIP]
 
 <p align="center">
- <img src=""/>
+ <img src="./assets/clean-layers.png"/>
 </p>
 
 ## Arquitetura de testes
