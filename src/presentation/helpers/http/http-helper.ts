@@ -36,3 +36,5 @@ export const forbbiden = ({ message, name }: Error): HttpResponse => {
     body: { name, message }
   }
 }
+
+export const noContent = (): HttpResponse => ({ statusCode: 204, body: null })

@@ -5,7 +5,7 @@ import {
   AddSurveyModel
 } from './add-survey-controller-protocols'
 import { AddSurveyController } from './add-survey-controller'
-import { badRequest, serverError } from '../../../helpers/http/http-helper'
+import { badRequest, serverError, noContent } from '../../../helpers/http/http-helper'
 import { ServerError } from '../../../errors/index'
 
 interface MakeTypes {
@@ -96,5 +96,15 @@ describe('Add Survey Controller', () => {
     const httpResponse = await sut.handle(fakeRequest)
 
     expect(httpResponse).toEqual(serverError(new ServerError()))
+  })
+
+  test('Should return 204 on success', async () => {
+    const { sut } = makeAddSurveyController()
+
+    const fakeRequest = makeFakeHttpRequest()
+
+    const httpResponse = await sut.handle(fakeRequest)
+
+    expect(httpResponse).toEqual(noContent())
   })
 })
