@@ -13,8 +13,8 @@
       - [- Infra](#infra)
       - [- Main](#main)
       - [- Presentation](#presentation)
-      - [- Validation](#validation) WIP
-  - [Grau de dependência](#grau-de-dependência)
+      - [- Validation](#validation)
+  - [Layers](#layers)
   - [Arquitetura de testes](#arquitetura-de-testes)
 
 ## Motivo 
@@ -105,10 +105,11 @@ A `Presnetation` é responsável pela orquestração entre serviços e também f
 
 Também responsável por termos a implementação da comunicação ao mundo externo do projeto tendo os padrões de comunicação HTTP, GRAPQHQL e entre outros.
 
-rsos da aplicação, além de possuir seus respectivos métodos apresentados na camada `/interfaces`.
+#### Validation
 
+A `Validation` é responsável pela implementação das validações de body, utilizando o design pattern composite para compor o objeto de validação para cada rota. 
 
-## Layers [WIP]
+## Layers
 
 <p align="center">
  <img src="./assets/clean-layers.png"/>
