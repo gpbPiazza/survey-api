@@ -1,4 +1,4 @@
-import { Validation, HttpRequest } from './add-survey-controller-protocols'
+import { Validation, HttpRequest, badRequest } from './add-survey-controller-protocols'
 import { AddSurveyController } from './add-survey-controller'
 
 interface MakeTypes {
@@ -43,5 +43,15 @@ describe('Add Survey Controller', () => {
     await sut.handle(fakeRequest)
 
     expect(validateSpy).toHaveBeenCalledWith(fakeRequest.body)
+  })
+
+  test('should return 400 if validation fails', async () => {
+    const { sut, validation } = makeAddSurveyController()
+    jest.spyOn(validation, 'validate').mockReturnValueOnce(new Error())
+    const fakeRequest = makeFakeHttpRequest()
+
+    const response = await sut.handle(fakeRequest)
+
+    expect(response).toEqual(badRequest(new Error()))
   })
 })
