@@ -1,7 +1,7 @@
 import { AccessDeniedError } from '../errors'
 import { HttpRequest, HttpResponse } from '../protocols'
 import { Middleware } from '../protocols/middleware'
-import { forbbiden } from '../helpers/http/http-helper'
+import { forbbiden, ok } from '../helpers/http/http-helper'
 import { LoadAccountByToken } from '../../domain/usecases/load-account-by-token'
 
 export class AuthMiddleware implements Middleware {
@@ -19,6 +19,6 @@ export class AuthMiddleware implements Middleware {
       return error
     }
 
-    return await new Promise(resolve => resolve(null))
+    return ok({ accountID: account.id })
   }
 }
