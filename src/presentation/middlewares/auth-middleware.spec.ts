@@ -1,12 +1,64 @@
 import { AccessDeniedError } from '../errors'
 import { forbbiden } from '../helpers/http/http-helper'
+import { HttpRequest } from '../protocols'
 import { AuthMiddleware } from './auth-middleware'
+import { LoadAccountByToken } from '../../domain/usecases/load-account-by-token'
+import { AccountModel } from '../../domain/models/account'
+
+interface MakeTypes {
+  sut: AuthMiddleware
+  loadAccountByToken: LoadAccountByToken
+}
+
+const makeAuthMiddleware = (): MakeTypes => {
+  const loadAccountByToken = makeLoadAccountByToken()
+  const sut = new AuthMiddleware(loadAccountByToken)
+  return {
+    sut,
+    loadAccountByToken
+  }
+}
+const makeLoadAccountByToken = (): LoadAccountByToken => {
+  class LoadAccountByTokenTest implements LoadAccountByToken {
+    async load (accessToken: string, role?: string | undefined): Promise<AccountModel> {
+      return await new Promise(resolve => resolve(makeFakeAccount()))
+    }
+  }
+
+  return new LoadAccountByTokenTest()
+}
+
+const makeFakeAccount = (): AccountModel => ({
+  id: 'valid_id',
+  name: 'valid_name',
+  email: 'valid_email@gmail.com',
+  password: 'hashed_password'
+})
+
+const makeHttpRequest = (): HttpRequest => {
+  return {
+    body: {},
+    headers: {
+      'x-access-token': 'any_token'
+    }
+  }
+}
+
 describe('AuthMiddleware', () => {
-  test('should 403 if no x-access-token existis in headers ', async () => {
-    const sut = new AuthMiddleware()
+  test('should 403 if no x-access-token existis in headers', async () => {
+    const { sut } = makeAuthMiddleware()
 
     const httpResponse = await sut.handle({})
 
     expect(httpResponse).toEqual(forbbiden(new AccessDeniedError()))
+  })
+
+  test('should call LoadAccountByToken with correct accessToken', async () => {
+    const { sut, loadAccountByToken } = makeAuthMiddleware()
+    const loadSpy = jest.spyOn(loadAccountByToken, 'load')
+    const request = makeHttpRequest()
+    await sut.handle(request)
+
+    expect(loadSpy).toHaveBeenCalledWith(request.headers?.['x-access-token'])
   })
 })
