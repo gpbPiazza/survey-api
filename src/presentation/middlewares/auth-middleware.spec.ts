@@ -37,7 +37,6 @@ const makeFakeAccount = (): AccountModel => ({
 
 const makeHttpRequest = (): HttpRequest => {
   return {
-    body: {},
     headers: {
       'x-access-token': 'any_token'
     }
@@ -60,5 +59,14 @@ describe('AuthMiddleware', () => {
     await sut.handle(request)
 
     expect(loadSpy).toHaveBeenCalledWith(request.headers?.['x-access-token'])
+  })
+
+  test('should return 403 if LoadAccountByToken returns no account', async () => {
+    const { sut, loadAccountByToken } = makeAuthMiddleware()
+    jest.spyOn(loadAccountByToken, 'load').mockReturnValueOnce(new Promise(resolve => resolve(null)))
+    const request = makeHttpRequest()
+    const httpResponse = await sut.handle(request)
+
+    expect(httpResponse).toEqual(forbbiden(new AccessDeniedError()))
   })
 })
