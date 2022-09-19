@@ -10,9 +10,9 @@ interface MakeTypes {
   loadAccountByToken: LoadAccountByToken
 }
 
-const makeAuthMiddleware = (): MakeTypes => {
+const makeAuthMiddleware = (role?: string): MakeTypes => {
   const loadAccountByToken = makeLoadAccountByToken()
-  const sut = new AuthMiddleware(loadAccountByToken)
+  const sut = new AuthMiddleware(loadAccountByToken, role)
   return {
     sut,
     loadAccountByToken
@@ -52,13 +52,14 @@ describe('AuthMiddleware', () => {
     expect(httpResponse).toEqual(forbbiden(new AccessDeniedError()))
   })
 
-  test('should call LoadAccountByToken with correct accessToken', async () => {
-    const { sut, loadAccountByToken } = makeAuthMiddleware()
+  test('should call LoadAccountByToken with correct values', async () => {
+    const role = 'any_role'
+    const { sut, loadAccountByToken } = makeAuthMiddleware(role)
     const loadSpy = jest.spyOn(loadAccountByToken, 'load')
     const request = makeHttpRequest()
     await sut.handle(request)
 
-    expect(loadSpy).toHaveBeenCalledWith(request.headers?.['x-access-token'])
+    expect(loadSpy).toHaveBeenCalledWith(request.headers?.['x-access-token'], role)
   })
 
   test('should return 403 if LoadAccountByToken returns no account', async () => {
