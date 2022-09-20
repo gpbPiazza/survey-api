@@ -69,4 +69,24 @@ describe('DBLoudAccountByToken', () => {
     await sut.load('accessToken', 'anyRole')
     expect(accountRepositorySpy).toHaveBeenCalledWith('any_token')
   })
+
+  test('should throws if AccountRepository throw', async () => {
+    const { sut, accountRepository } = makeDBLoudAccountByToken()
+    jest.spyOn(accountRepository, 'loadByToken').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    const primise = sut.load('accessToken', 'anyRole')
+    await expect(primise).rejects.toThrow()
+  })
+
+  test('should return null if AccountRepository returns null', async () => {
+    const { sut, accountRepository } = makeDBLoudAccountByToken()
+    jest.spyOn(accountRepository, 'loadByToken').mockReturnValueOnce(new Promise(resolve => resolve(null)))
+    const response = await sut.load('accessToken', 'anyRole')
+    expect(response).toBeNull()
+  })
+
+  test('should return accountModel on success', async () => {
+    const { sut } = makeDBLoudAccountByToken()
+    const response = await sut.load('accessToken', 'anyRole')
+    expect(response).toEqual(makeFakeAccount())
+  })
 })
