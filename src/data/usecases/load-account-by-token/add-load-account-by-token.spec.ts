@@ -89,4 +89,11 @@ describe('DBLoudAccountByToken', () => {
     const response = await sut.load('accessToken', 'anyRole')
     expect(response).toEqual(makeFakeAccount())
   })
+
+  test('should throws if AccountRepository throw', async () => {
+    const { sut, decrypter } = makeDBLoudAccountByToken()
+    jest.spyOn(decrypter, 'decrypt').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    const primise = sut.load('accessToken', 'anyRole')
+    await expect(primise).rejects.toThrow()
+  })
 })
