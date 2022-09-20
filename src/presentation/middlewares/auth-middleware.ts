@@ -15,7 +15,7 @@ export class AuthMiddleware implements Middleware {
         return error
       }
 
-      const account = await this.loadAccountByToken.load(accessToken, this.role)
+      const account = await this.loadAccountByToken.loadByToken(accessToken, this.role)
       if (!account) {
         return error
       }

@@ -90,4 +90,59 @@ describe('Account Mongo Repository', () => {
       expect(account?.accessToken).toBe('any_token')
     })
   })
+  describe('loadByToken()', () => {
+    test('should return an account on loadByToken success ', async () => {
+      const sut = makeAccountMongoRepository()
+
+      await accountCollection.insertOne({
+        name: 'any_name',
+        email: 'any_email@gmail.com',
+        password: 'valid_password',
+        token: 'any_token',
+        role: 'admin'
+      })
+
+      const account = await sut.loadByToken('any_token', 'admin')
+
+      expect(account).toBeTruthy()
+      expect(account.name).toBe('any_name')
+      expect(account.email).toBe('any_email@gmail.com')
+      expect(account.password).toBe('valid_password')
+      expect(account.id).toBeTruthy()
+    })
+
+    test('should return null when loadByEmail when not find a user', async () => {
+      const sut = makeAccountMongoRepository()
+
+      await accountCollection.insertOne({
+        name: 'any_name',
+        email: 'any_email@gmail.com',
+        password: 'valid_password',
+        token: 'any_token'
+      })
+
+      const account = await sut.loadByToken('no_existing_token')
+
+      expect(account).toBeFalsy()
+    })
+
+    test('should return an account on loadByToken with role optional', async () => {
+      const sut = makeAccountMongoRepository()
+
+      await accountCollection.insertOne({
+        name: 'any_name',
+        email: 'any_email@gmail.com',
+        password: 'valid_password',
+        token: 'any_token'
+      })
+
+      const account = await sut.loadByToken('any_token')
+
+      expect(account).toBeTruthy()
+      expect(account.name).toBe('any_name')
+      expect(account.email).toBe('any_email@gmail.com')
+      expect(account.password).toBe('valid_password')
+      expect(account.id).toBeTruthy()
+    })
+  })
 })

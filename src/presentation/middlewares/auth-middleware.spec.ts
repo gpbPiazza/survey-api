@@ -18,7 +18,7 @@ const makeAuthMiddleware = (role?: string): MakeTypes => {
 }
 const makeLoadAccountByToken = (): LoadAccountByToken => {
   class LoadAccountByTokenTest implements LoadAccountByToken {
-    async load (accessToken: string, role?: string | undefined): Promise<AccountModel> {
+    async loadByToken (accessToken: string, role?: string | undefined): Promise<AccountModel> {
       return await new Promise(resolve => resolve(makeFakeAccount()))
     }
   }
@@ -53,7 +53,7 @@ describe('AuthMiddleware', () => {
   test('should call LoadAccountByToken with correct values', async () => {
     const role = 'any_role'
     const { sut, loadAccountByToken } = makeAuthMiddleware(role)
-    const loadSpy = jest.spyOn(loadAccountByToken, 'load')
+    const loadSpy = jest.spyOn(loadAccountByToken, 'loadByToken')
     const request = makeHttpRequest()
     await sut.handle(request)
 
@@ -62,7 +62,7 @@ describe('AuthMiddleware', () => {
 
   test('should return 403 if LoadAccountByToken returns no account', async () => {
     const { sut, loadAccountByToken } = makeAuthMiddleware()
-    jest.spyOn(loadAccountByToken, 'load').mockReturnValueOnce(new Promise(resolve => resolve(null)))
+    jest.spyOn(loadAccountByToken, 'loadByToken').mockReturnValueOnce(new Promise(resolve => resolve(null)))
     const request = makeHttpRequest()
     const httpResponse = await sut.handle(request)
 
@@ -71,7 +71,7 @@ describe('AuthMiddleware', () => {
 
   test('should return 200 LoadAccountByToken if returns account', async () => {
     const { sut, loadAccountByToken } = makeAuthMiddleware()
-    jest.spyOn(loadAccountByToken, 'load').mockReturnValueOnce(new Promise(resolve => resolve(makeFakeAccount())))
+    jest.spyOn(loadAccountByToken, 'loadByToken').mockReturnValueOnce(new Promise(resolve => resolve(makeFakeAccount())))
     const request = makeHttpRequest()
     const httpResponse = await sut.handle(request)
 
@@ -80,7 +80,7 @@ describe('AuthMiddleware', () => {
 
   test('should return 500 if LoadAccountByToken throws', async () => {
     const { sut, loadAccountByToken } = makeAuthMiddleware()
-    jest.spyOn(loadAccountByToken, 'load').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    jest.spyOn(loadAccountByToken, 'loadByToken').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
     const request = makeHttpRequest()
     const httpResponse = await sut.handle(request)
 

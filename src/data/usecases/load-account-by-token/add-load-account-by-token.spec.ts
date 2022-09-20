@@ -52,48 +52,48 @@ describe('DBLoudAccountByToken', () => {
   test('should call Decrypter with correct values', async () => {
     const { sut, decrypter } = makeDBLoudAccountByToken()
     const decrypterSpy = jest.spyOn(decrypter, 'decrypt')
-    await sut.load('accessToken', 'anyRole')
+    await sut.loadByToken('accessToken', 'anyRole')
     expect(decrypterSpy).toHaveBeenCalledWith('accessToken')
   })
 
   test('should return null if Decrypter returns null', async () => {
     const { sut, decrypter } = makeDBLoudAccountByToken()
     jest.spyOn(decrypter, 'decrypt').mockReturnValueOnce(new Promise(resolve => resolve(null)))
-    const response = await sut.load('accessToken', 'anyRole')
+    const response = await sut.loadByToken('accessToken', 'anyRole')
     expect(response).toBeNull()
   })
 
   test('should call AccountRepository with correct values', async () => {
     const { sut, accountRepository } = makeDBLoudAccountByToken()
     const accountRepositorySpy = jest.spyOn(accountRepository, 'loadByToken')
-    await sut.load('accessToken', 'anyRole')
+    await sut.loadByToken('accessToken', 'anyRole')
     expect(accountRepositorySpy).toHaveBeenCalledWith('any_token')
   })
 
   test('should throws if AccountRepository throw', async () => {
     const { sut, accountRepository } = makeDBLoudAccountByToken()
     jest.spyOn(accountRepository, 'loadByToken').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
-    const primise = sut.load('accessToken', 'anyRole')
+    const primise = sut.loadByToken('accessToken', 'anyRole')
     await expect(primise).rejects.toThrow()
   })
 
   test('should return null if AccountRepository returns null', async () => {
     const { sut, accountRepository } = makeDBLoudAccountByToken()
     jest.spyOn(accountRepository, 'loadByToken').mockReturnValueOnce(new Promise(resolve => resolve(null)))
-    const response = await sut.load('accessToken', 'anyRole')
+    const response = await sut.loadByToken('accessToken', 'anyRole')
     expect(response).toBeNull()
   })
 
   test('should return accountModel on success', async () => {
     const { sut } = makeDBLoudAccountByToken()
-    const response = await sut.load('accessToken', 'anyRole')
+    const response = await sut.loadByToken('accessToken', 'anyRole')
     expect(response).toEqual(makeFakeAccount())
   })
 
   test('should throws if AccountRepository throw', async () => {
     const { sut, decrypter } = makeDBLoudAccountByToken()
     jest.spyOn(decrypter, 'decrypt').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
-    const primise = sut.load('accessToken', 'anyRole')
+    const primise = sut.loadByToken('accessToken', 'anyRole')
     await expect(primise).rejects.toThrow()
   })
 })
