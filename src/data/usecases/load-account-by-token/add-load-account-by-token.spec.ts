@@ -67,7 +67,7 @@ describe('DBLoudAccountByToken', () => {
     const { sut, accountRepository } = makeDBLoudAccountByToken()
     const accountRepositorySpy = jest.spyOn(accountRepository, 'loadByToken')
     await sut.loadByToken('accessToken', 'anyRole')
-    expect(accountRepositorySpy).toHaveBeenCalledWith('any_token')
+    expect(accountRepositorySpy).toHaveBeenCalledWith('accessToken', 'anyRole')
   })
 
   test('should throws if AccountRepository throw', async () => {
