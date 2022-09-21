@@ -55,11 +55,11 @@ describe('JWT Adabpter', () => {
       expect(value).toBe('any_value')
     })
 
-    test('should throws when verift throw', async () => {
+    test('should return null when verift throws', async () => {
       const sut = makeSut()
       jest.spyOn(jwt, 'verify').mockImplementationOnce(() => { throw new Error('any_error') })
-      const promise = sut.decrypt('any_value')
-      await expect(promise).rejects.toThrow()
+      const response = await sut.decrypt('any_value')
+      expect(response).toBeFalsy()
     })
   })
 })

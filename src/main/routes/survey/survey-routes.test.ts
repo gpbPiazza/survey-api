@@ -38,6 +38,19 @@ describe('Survey Routes', () => {
         })
         .expect(403)
     })
+    test('should return 403 when x-access-token is invalid', async () => {
+      await request(app)
+        .post('/api/surveys')
+        .set('x-access-token', 'any_invalid_token')
+        .send({
+          question: 'any_question',
+          answers: [{
+            image: 'any_image',
+            answer: 'any_answer'
+          }]
+        })
+        .expect(403)
+    })
     test('should return 204 on create survey with valid accessToken', async () => {
       const password = await hash('valid_password', 12)
       const res = await accountCollection.insertOne({
