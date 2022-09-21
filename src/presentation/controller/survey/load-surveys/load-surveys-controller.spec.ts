@@ -19,7 +19,7 @@ const makeLoadSurveysController = (): MakeTypes => {
 
 const makeLoadSurveys = (): LoadSurveys => {
   class LoadSurveysTest implements LoadSurveys {
-    async load (): Promise<SurveyModel[]> {
+    async loadAll (): Promise<SurveyModel[]> {
       return await new Promise(resolve => resolve(makeListOfSurveyModel()))
     }
   }
@@ -40,9 +40,16 @@ const makeSurveyModel = (): SurveyModel => {
     answers: [
       makeAnswerModel()
     ],
-    date: new Date()
+    date: makeDateOnly()
   }
 }
+
+function makeDateOnly (): Date {
+  const date = new Date()
+  date.setHours(0, 0, 0, 0)
+  return date
+}
+
 const makeListOfSurveyModel = (): SurveyModel[] => {
   const result: SurveyModel[] = []
   result.push(makeSurveyModel())
@@ -59,7 +66,7 @@ const makeFakeHttpRequest = (): HttpRequest => ({
 describe('Load Surveys Controller', () => {
   test('should call LoadSurveys with correct values', async () => {
     const { sut, loadSurveys } = makeLoadSurveysController()
-    const loadSpy = jest.spyOn(loadSurveys, 'load')
+    const loadSpy = jest.spyOn(loadSurveys, 'loadAll')
     const fakeRequest = makeFakeHttpRequest()
 
     await sut.handle(fakeRequest)
@@ -69,7 +76,7 @@ describe('Load Surveys Controller', () => {
 
   test('should return 500 when LoadSurveys throws', async () => {
     const { sut, loadSurveys } = makeLoadSurveysController()
-    jest.spyOn(loadSurveys, 'load').mockImplementationOnce(async () => {
+    jest.spyOn(loadSurveys, 'loadAll').mockImplementationOnce(async () => {
       return await new Promise((resolve, reject) => reject(new Error()))
     })
     const fakeRequest = makeFakeHttpRequest()

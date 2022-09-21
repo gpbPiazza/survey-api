@@ -13,7 +13,7 @@ export class LoadSurveysController implements Controller {
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
-      const response = await this.loadSurveys.load()
+      const response = await this.loadSurveys.loadAll()
       return ok(response)
     } catch (error) {
       return serverError(error)

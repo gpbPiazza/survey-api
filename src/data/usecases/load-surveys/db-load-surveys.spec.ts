@@ -17,7 +17,7 @@ const makeDBLoadSurveys = (): MakeTypes => {
 
 const makeLoadSurveysRepository = (): LoadSurveysRepository => {
   class LoadSurveysTest implements LoadSurveysRepository {
-    async load (): Promise<SurveyModel[]> {
+    async loadAll (): Promise<SurveyModel[]> {
       return await new Promise(resolve => resolve(makeListOfSurveyModel()))
     }
   }
@@ -39,8 +39,14 @@ const makeSurveyModel = (): SurveyModel => {
     answers: [
       makeAnswerModel()
     ],
-    date: new Date()
+    date: makeDateOnly()
   }
+}
+
+function makeDateOnly (): Date {
+  const date = new Date()
+  date.setHours(0, 0, 0, 0)
+  return date
 }
 
 const makeListOfSurveyModel = (): SurveyModel[] => {
@@ -54,9 +60,9 @@ const makeListOfSurveyModel = (): SurveyModel[] => {
 describe('DBLoadSurveys UseCase', () => {
   test('should call LoadSurveysRepository with correct values', async () => {
     const { sut, loadSurveysRepository } = makeDBLoadSurveys()
-    const repositorySpy = jest.spyOn(loadSurveysRepository, 'load')
+    const repositorySpy = jest.spyOn(loadSurveysRepository, 'loadAll')
 
-    await sut.load()
+    await sut.loadAll()
 
     expect(repositorySpy).toHaveBeenCalledWith()
   })
@@ -64,9 +70,9 @@ describe('DBLoadSurveys UseCase', () => {
   test('should throws if AddSurveyRepository throws', async () => {
     const { sut, loadSurveysRepository } = makeDBLoadSurveys()
 
-    jest.spyOn(loadSurveysRepository, 'load').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
+    jest.spyOn(loadSurveysRepository, 'loadAll').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())))
 
-    const promise = sut.load()
+    const promise = sut.loadAll()
 
     await expect(promise).rejects.toThrow()
   })
@@ -74,7 +80,7 @@ describe('DBLoadSurveys UseCase', () => {
   test('should return a list off SurveysModel on success', async () => {
     const { sut } = makeDBLoadSurveys()
 
-    const response = await sut.load()
+    const response = await sut.loadAll()
 
     expect(response).toEqual(makeListOfSurveyModel())
   })
