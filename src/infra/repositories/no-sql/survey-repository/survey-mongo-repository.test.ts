@@ -84,5 +84,14 @@ describe('Suvery Mongo Repository', () => {
       expect(response[0].question).toBe('any_question')
       expect(response[1].question).toBe('any_question')
     })
+
+    test('should return empty array when has any Surveys on db', async () => {
+      const sut = makeSurveyMongoRepository()
+
+      const response = await sut.loadAll()
+
+      expect(response).toBeTruthy()
+      expect(response.length).toBe(0)
+    })
   })
 })
