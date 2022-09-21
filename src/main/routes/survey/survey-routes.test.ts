@@ -76,7 +76,8 @@ describe('Survey Routes', () => {
           answers: [{
             image: 'any_image',
             answer: 'any_answer'
-          }]
+          }],
+          date: new Date()
         })
         .expect(204)
     })

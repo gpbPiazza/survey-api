@@ -14,7 +14,8 @@ const makeFakeAddSurveyModel = (): AddSurveyModel => {
       answer: 'any_answer'
     }, {
       answer: 'another_answer'
-    }]
+    }],
+    date: new Date()
   }
 }
 describe('Suvery Mongo Repository', () => {

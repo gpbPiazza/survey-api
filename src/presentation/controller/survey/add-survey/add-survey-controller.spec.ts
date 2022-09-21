@@ -49,7 +49,8 @@ const makeFakeHttpRequest = (): HttpRequest => ({
     answers: [{
       image: 'any_image',
       answer: 'any_answer'
-    }]
+    }],
+    date: new Date()
   }
 })
 
