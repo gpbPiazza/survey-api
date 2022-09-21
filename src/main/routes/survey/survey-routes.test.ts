@@ -25,7 +25,7 @@ describe('Survey Routes', () => {
     await surveyCollection.deleteMany(removeAll)
     await accountCollection.deleteMany(removeAll)
   })
-  describe('POST /survey ', () => {
+  describe('POST /surveys ', () => {
     test('should return 403 on create survey without accessToken', async () => {
       await request(app)
         .post('/api/surveys')
@@ -80,6 +80,14 @@ describe('Survey Routes', () => {
           date: new Date()
         })
         .expect(204)
+    })
+  })
+
+  describe('GET /surveys ', () => {
+    test('should return 200 on success', async () => {
+      await request(app)
+        .get('/api/surveys')
+        .expect(200)
     })
   })
 })

@@ -85,7 +85,7 @@ describe('Suvery Mongo Repository', () => {
       expect(response[1].question).toBe('any_question')
     })
 
-    test('should return empty array when has any Surveys on db', async () => {
+    test('should return empty array when has no Surveys on db', async () => {
       const sut = makeSurveyMongoRepository()
 
       const response = await sut.loadAll()
