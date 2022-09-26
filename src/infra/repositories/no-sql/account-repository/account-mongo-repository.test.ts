@@ -98,7 +98,7 @@ describe('Account Mongo Repository', () => {
         name: 'any_name',
         email: 'any_email@gmail.com',
         password: 'valid_password',
-        token: 'any_token',
+        accessToken: 'any_token',
         role: 'admin'
       })
 
@@ -118,7 +118,7 @@ describe('Account Mongo Repository', () => {
         name: 'any_name',
         email: 'any_email@gmail.com',
         password: 'valid_password',
-        token: 'any_token'
+        accessToken: 'any_token'
       })
 
       const account = await sut.loadByToken('any_token', 'admin')
@@ -133,7 +133,7 @@ describe('Account Mongo Repository', () => {
         name: 'any_name',
         email: 'any_email@gmail.com',
         password: 'valid_password',
-        token: 'any_token',
+        accessToken: 'any_token',
         role: 'admin'
       })
 
@@ -153,7 +153,7 @@ describe('Account Mongo Repository', () => {
         name: 'any_name',
         email: 'any_email@gmail.com',
         password: 'valid_password',
-        token: 'any_token'
+        accessToken: 'any_token'
       })
 
       const account = await sut.loadByToken('no_existing_token')
@@ -168,7 +168,7 @@ describe('Account Mongo Repository', () => {
         name: 'any_name',
         email: 'any_email@gmail.com',
         password: 'valid_password',
-        token: 'any_token'
+        accessToken: 'any_token'
       })
 
       const account = await sut.loadByToken('any_token')

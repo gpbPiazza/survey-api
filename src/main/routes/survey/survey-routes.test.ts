@@ -22,7 +22,7 @@ const insetUserInDataBase = async (): Promise<string> => {
     _id: userID
   }, {
     $set: {
-      token: accessToken
+      accessToken
     }
   })
   return accessToken

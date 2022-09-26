@@ -31,7 +31,7 @@ export class AccountMongoRepository implements
     const accountCollection = MongoHelper.getCollection('accounts')
 
     const result = await accountCollection.findOne({
-      token: accessToken,
+      accessToken,
       $or: [{
         role
       }, {

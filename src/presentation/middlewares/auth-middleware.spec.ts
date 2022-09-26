@@ -1,5 +1,5 @@
 import { AccessDeniedError } from '../errors'
-import { forbbiden, ok, serverError } from '../helpers/http/http-helper'
+import { badRequest, forbbiden, ok, serverError } from '../helpers/http/http-helper'
 import { AuthMiddleware } from './auth-middleware'
 import { HttpRequest, AccountModel, LoadAccountByToken } from './auth-middleware-protocols'
 
@@ -42,10 +42,18 @@ const makeHttpRequest = (): HttpRequest => {
 }
 
 describe('AuthMiddleware', () => {
-  test('should 403 if no x-access-token existis in headers', async () => {
+  test('should 404 if no headers were provided', async () => {
     const { sut } = makeAuthMiddleware()
 
-    const httpResponse = await sut.handle({})
+    const httpResponse = await sut.handle({ })
+
+    expect(httpResponse).toEqual(badRequest({ message: 'no headers were provided', name: 'NoHeaders' }))
+  })
+
+  test('should 404 if no x-access-token were provided on headers', async () => {
+    const { sut } = makeAuthMiddleware()
+
+    const httpResponse = await sut.handle({ headers: {} })
 
     expect(httpResponse).toEqual(forbbiden(new AccessDeniedError()))
   })
