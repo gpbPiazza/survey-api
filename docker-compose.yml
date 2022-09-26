@@ -18,5 +18,7 @@ services:
       - ./dist:/usr/src/clean-api/dist
     ports:
       - "5050:5050"
+    environment:
+      - MONGO_URL=mongodb://mongo:27017/clean-node-api
     links:
      - mongo

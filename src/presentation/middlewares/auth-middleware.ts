@@ -10,7 +10,13 @@ export class AuthMiddleware implements Middleware {
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const error = forbbiden(new AccessDeniedError())
-      const accessToken = httpRequest.headers?.['x-access-token']
+
+      const headers = httpRequest.headers
+      if (!headers) {
+        return error
+      }
+
+      const accessToken = headers['x-access-token']
       if (!accessToken) {
         return error
       }
