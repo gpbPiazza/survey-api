@@ -3,7 +3,7 @@ import { forbbiden, ok, serverError } from '../helpers/http/http-helper'
 import { AuthMiddleware } from './auth-middleware'
 import { HttpRequest, AccountModel, LoadAccountByToken } from './auth-middleware-protocols'
 
-interface MakeTypes {
+type MakeTypes = {
   sut: AuthMiddleware
   loadAccountByToken: LoadAccountByToken
 }

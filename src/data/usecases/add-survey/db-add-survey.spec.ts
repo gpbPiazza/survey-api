@@ -1,7 +1,7 @@
 import { AddSurvey, AddSurveyModel, AddSurveyRepository } from './db-add-survey-protocols'
 import { DbAddSurvey } from './db-add-survey'
 
-interface MakeTypes {
+type MakeTypes = {
   addSuveryRepository: AddSurveyRepository
   sut: AddSurvey
 }

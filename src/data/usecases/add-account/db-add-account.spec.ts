@@ -43,7 +43,7 @@ const makeLoadAccountRepositoryStub = (): LoadAccountByEmailRepository => {
   return new LoadAccountByEmailRepositoryStub()
 }
 
-interface MakeTypes {
+type MakeTypes = {
   dbAddAccount: DbAddAccount
   hasher: Hasher
   addAccountRepository: AddAccountRepository

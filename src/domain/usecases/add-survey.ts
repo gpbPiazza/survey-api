@@ -1,8 +1,8 @@
-export interface AddSurveyAnswer {
+export type AddSurveyAnswer = {
   image?: string
   answer: string
 }
-export interface AddSurveyModel {
+export type AddSurveyModel = {
   question: string
   answers: AddSurveyAnswer[]
   date: Date

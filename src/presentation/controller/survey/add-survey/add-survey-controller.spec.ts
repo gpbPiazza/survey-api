@@ -8,7 +8,7 @@ import { AddSurveyController } from './add-survey-controller'
 import { badRequest, serverError, noContent } from '../../../helpers/http/http-helper'
 import { ServerError } from '../../../errors/index'
 
-interface MakeTypes {
+type MakeTypes = {
   sut: AddSurveyController
   validation: Validation
   addSurvey: AddSurvey

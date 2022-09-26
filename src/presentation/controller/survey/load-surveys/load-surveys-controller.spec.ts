@@ -3,7 +3,7 @@ import { LoadSurveys, SurveyModel, HttpRequest, AnswerModel } from './load-surve
 import { serverError, ok } from '../../../helpers/http/http-helper'
 import { ServerError } from '../../../errors/index'
 
-interface MakeTypes {
+type MakeTypes = {
   sut: LoadSurveysController
   loadSurveys: LoadSurveys
 }

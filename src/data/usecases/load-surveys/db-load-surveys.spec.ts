@@ -1,7 +1,7 @@
 import { DBLoadSurveys } from './db-load-surveys'
 import { LoadSurveysRepository, SurveyModel, AnswerModel } from './db-load-surveys-protocols'
 
-interface MakeTypes {
+type MakeTypes = {
   sut: DBLoadSurveys
   loadSurveysRepository: LoadSurveysRepository
 }

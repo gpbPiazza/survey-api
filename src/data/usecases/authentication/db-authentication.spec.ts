@@ -9,7 +9,7 @@ import {
   LoadAccountByEmailRepository
 } from './db-authentication-protocols'
 
-interface SutTypes {
+type SutTypes = {
   loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
   sut: Authentication
   hashComparerStub: HashComparer

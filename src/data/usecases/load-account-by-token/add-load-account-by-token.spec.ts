@@ -3,7 +3,8 @@ import { DBLoudAccountByToken } from './add-load-account-by-token'
 import { AccountModel } from '../../../domain/models/account'
 import { Decrypter } from '../../protocols/criptography/decrypter'
 import { LoadAccountByTokenRepository } from '../../protocols/db/account/load-account-by-token-repository'
-interface SutTypes {
+
+type MakeTypes = {
   sut: DBLoudAccountByToken
   decrypter: Decrypter
   accountRepository: LoadAccountByTokenRepository
@@ -37,7 +38,7 @@ const makeAccountRepository = (): LoadAccountByTokenRepository => {
   return new AccountRepositoryTest()
 }
 
-const makeDBLoudAccountByToken = (): SutTypes => {
+const makeDBLoudAccountByToken = (): MakeTypes => {
   const decrypter = makeDecrypter()
   const accountRepository = makeAccountRepository()
   const sut = new DBLoudAccountByToken(decrypter, accountRepository)

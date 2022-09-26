@@ -3,7 +3,7 @@ import { serverError, ok } from '../../presentation/helpers/http/http-helper'
 import { Controller, HttpRequest, HttpResponse } from '../../presentation/protocols'
 import { LogControllerDecorator } from './log-controller-decorator'
 
-interface MakeTYpes {
+type MakeTypes = {
   logControllerDecorator: LogControllerDecorator
   anyController: Controller
   logErrorRepository: LogErrorRepository
@@ -33,7 +33,7 @@ const makeLogErrorRepository = (): LogErrorRepository => {
   return new MockLogErrorRepository()
 }
 
-const makeLogControllerDecorator = (): MakeTYpes => {
+const makeLogControllerDecorator = (): MakeTypes => {
   const anyController = makeController()
   const logErrorRepository = makeLogErrorRepository()
   const logControllerDecorator = new LogControllerDecorator(anyController, logErrorRepository)

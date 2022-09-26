@@ -3,7 +3,7 @@ import { badRequest, serverError, unauthorized, ok } from '../../helpers/http/ht
 import { MissingParamError } from '../../errors'
 import { HttpRequest, Authentication, Validation, AuthenticationModel } from './login-controller-protocols'
 
-interface MakeTypes {
+type MakeTypes = {
   loginController: LoginController
   authenticator: Authentication
   validation: Validation

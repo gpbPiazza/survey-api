@@ -11,7 +11,7 @@ import {
 import { SignUpController } from './signup-controller'
 import { ok, serverError, badRequest, forbbiden } from '../../helpers/http/http-helper'
 
-interface MakeTypes {
+type MakeTypes = {
   singUpController: SignUpController
   addAccount: AddAccount
   validation: Validation
