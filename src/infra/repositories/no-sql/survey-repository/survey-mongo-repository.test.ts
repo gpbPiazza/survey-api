@@ -1,5 +1,5 @@
 
-import { Collection } from 'mongodb'
+import { Collection, ObjectId } from 'mongodb'
 import { AddSurveyModel } from '../../../../domain/usecases/add-survey'
 import env from '../../../../main/config/env'
 import { MongoHelper } from '../helpers/mongo-helper'
@@ -92,6 +92,28 @@ describe('Suvery Mongo Repository', () => {
 
       expect(response).toBeTruthy()
       expect(response.length).toBe(0)
+    })
+  })
+
+  describe('LoadSurveyByIdRepository', () => {
+    test('should return a SurveyModel on success', async () => {
+      const result = await surveyCollection.insertMany([makeSurveyModelWithoutID(), makeSurveyModelWithoutID()])
+      const sut = makeSurveyMongoRepository()
+
+      const firstID = result.insertedIds[0]
+      const response = await sut.loadById(firstID.toString())
+
+      expect(response).toBeTruthy()
+      expect(response.id).toBe(firstID.toString())
+    })
+
+    test('should return a null when lodById not find anything', async () => {
+      const sut = makeSurveyMongoRepository()
+
+      const fakeId = new ObjectId()
+      const response = await sut.loadById(fakeId.toString())
+
+      expect(response).toBeFalsy()
     })
   })
 })
