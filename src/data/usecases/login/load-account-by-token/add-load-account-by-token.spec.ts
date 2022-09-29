@@ -1,8 +1,8 @@
 
 import { DBLoudAccountByToken } from './add-load-account-by-token'
-import { AccountModel } from '../../../domain/models/account'
-import { Decrypter } from '../../protocols/criptography/decrypter'
-import { LoadAccountByTokenRepository } from '../../protocols/db/account/load-account-by-token-repository'
+import { AccountModel } from '../../../../domain/models/account'
+import { Decrypter } from '../../../protocols/criptography/decrypter'
+import { LoadAccountByTokenRepository } from '../../../protocols/db/account/load-account-by-token-repository'
 
 type MakeTypes = {
   sut: DBLoudAccountByToken
