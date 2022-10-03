@@ -35,7 +35,7 @@ const makeSurveyResultModel = (): SurveyResultModel => {
     id: 'any_sruvey_result_id',
     surveyId: 'any_survey_id',
     accountId: 'any_account_id',
-    answer: 'string',
+    answerId: 'any_answer_id',
     date: makeDateOnly()
   }
 }
@@ -82,8 +82,7 @@ const makeFakeHttpRequest = (): HttpRequest => ({
 const makeAddSurveyResultModel = (): AddSurveyResultModel => {
   return {
     surveyId: makeSurveyModel().id,
-    // answerId: makeFakeHttpRequest().body.answerId,
-    answer: '',
+    answerId: makeFakeHttpRequest().body.answerId,
     accountId: makeFakeHttpRequest().accountId,
     date: makeDateOnly()
   }

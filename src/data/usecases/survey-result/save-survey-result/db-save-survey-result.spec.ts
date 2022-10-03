@@ -24,8 +24,8 @@ const makeSaveSurveyResultRepository = (): SaveSurveyResultRepository => {
   return new SaveSurveyResultRepositoryTest()
 }
 const makeFakeAddSurveyResultModel = (): AddSurveyResultModel => {
-  const { surveyId, accountId, answer, date } = makeFakeSurveyResultModel()
-  return { surveyId, accountId, answer, date }
+  const { surveyId, accountId, answerId, date } = makeFakeSurveyResultModel()
+  return { surveyId, accountId, answerId, date }
 }
 
 const makeFakeSurveyResultModel = (): SurveyResultModel => {
@@ -33,7 +33,7 @@ const makeFakeSurveyResultModel = (): SurveyResultModel => {
     id: 'any_id',
     surveyId: 'any_survey_id',
     accountId: 'any_account_id',
-    answer: 'string',
+    answerId: 'any_answer_id',
     date: makeDateOnly()
   }
 }

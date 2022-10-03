@@ -10,7 +10,7 @@ export class SurveyResultMongoRepository implements SaveSurveyResultRepository {
 
     }, {
       $set: {
-        answer: input.answer,
+        answerId: input.answerId,
         date: input.date
       }
     }, {
