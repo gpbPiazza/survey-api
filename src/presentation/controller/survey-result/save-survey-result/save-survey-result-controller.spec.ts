@@ -35,7 +35,7 @@ const makeSurveyResultModel = (): SurveyResultModel => {
     id: 'any_sruvey_result_id',
     surveyId: 'any_survey_id',
     accountId: 'any_account_id',
-    answerId: 'any_answer_id',
+    answer: 'any_answer',
     date: makeDateOnly()
   }
 }
@@ -74,7 +74,7 @@ const makeFakeHttpRequest = (): HttpRequest => ({
     surveyId: 'any_survey_id'
   },
   body: {
-    answerId: 'any_answer_id',
+    answer: 'any_answer',
     date: makeDateOnly()
   },
   accountId: 'any_account_id'
@@ -82,7 +82,7 @@ const makeFakeHttpRequest = (): HttpRequest => ({
 const makeAddSurveyResultModel = (): AddSurveyResultModel => {
   return {
     surveyId: makeSurveyModel().id,
-    answerId: makeFakeHttpRequest().body.answerId,
+    answer: makeFakeHttpRequest().body.answer,
     accountId: makeFakeHttpRequest().accountId,
     date: makeDateOnly()
   }
@@ -123,16 +123,16 @@ describe('Save Survey Result Controller', () => {
     expect(response).toEqual(serverError(new Error()))
   })
 
-  test('should return 400 if body not contains a valid answerId', async () => {
+  test('should return 400 if body not contains a valid answer', async () => {
     const { sut } = makeSaveSurveyResultController()
 
     const httpRequest = makeFakeHttpRequest()
 
-    httpRequest.body.answerId = 'not_valid_id'
+    httpRequest.body.answer = 'not_valid_answer'
 
     const response = await sut.handle(httpRequest)
 
-    expect(response).toEqual(badRequest(new InvalidParamError('answerId')))
+    expect(response).toEqual(badRequest(new InvalidParamError('answer')))
   })
 
   test('should call SaveSurveyResult with correct value', async () => {

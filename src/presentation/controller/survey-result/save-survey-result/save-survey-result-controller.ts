@@ -6,7 +6,7 @@ import { badRequest, forbbiden, serverError, ok } from '../../../helpers/http/ht
 export class SaveSurveyResultController implements Controller {
   constructor (
     private readonly loadSurveyById: LoadSurveyById,
-    private readonly saveSurveyResylt: SaveSurveyResult
+    private readonly saveSurveyResult: SaveSurveyResult
   ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -20,14 +20,14 @@ export class SaveSurveyResultController implements Controller {
         return forbbiden(new InvalidParamError('surveyId'))
       }
 
-      const answerIds = survey.answers.map(a => a.id)
-      if (!answerIds.includes(body.answerId)) {
-        return badRequest(new InvalidParamError('answerId'))
+      const answers = survey.answers.map(a => a.answer)
+      if (!answers.includes(body.answer)) {
+        return badRequest(new InvalidParamError('answer'))
       }
 
-      const response = await this.saveSurveyResylt.save({
+      const response = await this.saveSurveyResult.save({
         surveyId,
-        answerId: body.answerId,
+        answer: body.answer,
         accountId,
         date: body.date
       })

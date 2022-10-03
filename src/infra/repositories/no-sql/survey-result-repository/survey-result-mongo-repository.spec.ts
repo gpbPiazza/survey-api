@@ -11,7 +11,7 @@ let surveyResultsCollection: Collection
 
 const makeAnswerModel = (): AnswerModel => {
   return {
-    id: 'zap',
+    id: 'any_answer_id',
     image: 'any_image',
     answer: 'any_answer'
   }
@@ -71,14 +71,14 @@ describe('Suvery Result Mongo Repository', () => {
 
       const surveyResult = await sut.save({
         surveyId: surveyId,
-        answerId: makeAnswerModel().id,
+        answer: makeAnswerModel().answer,
         accountId: accountId,
         date: makeDateOnly()
       })
 
       expect(surveyResult).toBeTruthy()
       expect(surveyResult.id).toBeTruthy()
-      expect(surveyResult.answerId).toBe(makeAnswerModel().id)
+      expect(surveyResult.answer).toBe(makeAnswerModel().answer)
     })
     test('should update a survey result if its not new', async () => {
       const surveyId = await makeSurveyModel()
@@ -93,14 +93,14 @@ describe('Suvery Result Mongo Repository', () => {
 
       const surveyResult = await sut.save({
         surveyId: surveyId,
-        answerId: 'another_answer_id',
+        answer: 'another_answer',
         accountId: accountId,
         date: makeDateOnly()
       })
 
       expect(surveyResult).toBeTruthy()
       expect(surveyResult.id).toEqual(surveyReult.insertedId.toString())
-      expect(surveyResult.answerId).toBe('another_answer_id')
+      expect(surveyResult.answer).toBe('another_answer')
     })
   })
 })

@@ -83,7 +83,7 @@ describe('AuthMiddleware', () => {
     const request = makeHttpRequest()
     const httpResponse = await sut.handle(request)
 
-    expect(httpResponse).toEqual(ok({ accountID: 'valid_id' }))
+    expect(httpResponse).toEqual(ok({ accountId: 'valid_id' }))
   })
 
   test('should return 500 if LoadAccountByToken throws', async () => {

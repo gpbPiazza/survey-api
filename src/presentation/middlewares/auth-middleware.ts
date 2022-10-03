@@ -25,8 +25,7 @@ export class AuthMiddleware implements Middleware {
       if (!account) {
         return forbiddenError
       }
-
-      return ok({ accountID: account.id })
+      return ok({ accountId: account.id.toString() })
     } catch (err) {
       return serverError(err)
     }
