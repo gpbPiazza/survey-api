@@ -1,12 +1,12 @@
 import { EmailInUserError, MissingParamError, ServerError } from '../../errors'
 import {
   AddAccount,
-  AddAccountModel,
+  AddAccountParam,
   AccountModel,
   HttpRequest,
   Validation,
   Authentication,
-  AuthenticationModel
+  AuthenticationParam
 } from './signup-controller-protocols'
 import { SignUpController } from './signup-controller'
 import { ok, serverError, badRequest, forbbiden } from '../../helpers/http/http-helper'
@@ -20,7 +20,7 @@ type MakeTypes = {
 
 const makeAddAccount = (): AddAccount => {
   class AddAccountTest implements AddAccount {
-    async add (account: AddAccountModel): Promise<AccountModel> {
+    async add (account: AddAccountParam): Promise<AccountModel> {
       const fakeAccount = {
         id: 'valid_id',
         name: 'valid_name',
@@ -70,7 +70,7 @@ const makeHttpRequest = (): HttpRequest => ({
 
 const makeAuthentication = (): Authentication => {
   class AuthenticationStub implements Authentication {
-    async auth (model: AuthenticationModel): Promise<string> {
+    async auth (model: AuthenticationParam): Promise<string> {
       return await new Promise(resolve => resolve('any_token'))
     }
   }

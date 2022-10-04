@@ -3,7 +3,7 @@ import { LoadSurveyById, SurveyModel, AnswerModel, HttpRequest, SaveSurveyResult
 import { InvalidParamError } from '../../../errors'
 import { badRequest, forbbiden, serverError, ok } from '../../../helpers/http/http-helper'
 import { SurveyResultModel } from '../../../../domain/models/survey-result'
-import { AddSurveyResultModel } from '../../../../domain/usecases/survey-result/save-survey-result'
+import { AddSurveyResultParams } from '../../../../domain/usecases/survey-result/save-survey-result'
 
 type MakeTypes = {
   sut: SaveSurveyResultController
@@ -24,7 +24,7 @@ const makeSaveSurveyResultController = (): MakeTypes => {
 
 const makeSaveSurveyResult = (): SaveSurveyResult => {
   class SurveyResultTest implements SaveSurveyResult {
-    async save (data: AddSurveyResultModel): Promise<SurveyResultModel> {
+    async save (data: AddSurveyResultParams): Promise<SurveyResultModel> {
       return await new Promise(resolve => resolve(makeSurveyResultModel()))
     }
   }
@@ -79,7 +79,7 @@ const makeFakeHttpRequest = (): HttpRequest => ({
   },
   accountId: 'any_account_id'
 })
-const makeAddSurveyResultModel = (): AddSurveyResultModel => {
+const makeAddSurveyResultModel = (): AddSurveyResultParams => {
   return {
     surveyId: makeSurveyModel().id,
     answer: makeFakeHttpRequest().body.answer,

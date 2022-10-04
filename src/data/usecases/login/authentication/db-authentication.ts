@@ -3,7 +3,7 @@ import {
   HashComparer,
   UpdateAccessTokenRepository,
   Authentication,
-  AuthenticationModel,
+  AuthenticationParam,
   LoadAccountByEmailRepository
 } from './db-authentication-protocols'
 export class DBAuthentication implements Authentication {
@@ -13,7 +13,7 @@ export class DBAuthentication implements Authentication {
     private readonly encrypter: Encrypter,
     private readonly updateAccessTokenRepository: UpdateAccessTokenRepository) {}
 
-  async auth (model: AuthenticationModel): Promise<string> {
+  async auth (model: AuthenticationParam): Promise<string> {
     const accountModel = await this.loadAccountByEmailRepository.loadByEmail(model.email)
     if (!accountModel) {
       return null
