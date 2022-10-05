@@ -1,12 +1,14 @@
-# Clean API
+# Survey API
 
-> _Objetivo: Desenvolver uma API seguindo os ensimanetos do livro Clean Architecture e utilizar TDD durante o desenvolvimento do projeto inteiro_.
+> Survey api é uma aplicação que permite usuários serem criados, autenticados e disponibiliza os mesmo criarem enquentes e responder elas.
 
 ### 📋 Pré-requisitos
 
 Você precisa ter instalado:
 
 - NodeJS 14.15.x | | maior
+
+- Docker 
 
 - Mongodb 4.2.x | |  maior
 
@@ -25,14 +27,9 @@ Para instalar as dependências do projeto
 
 Na raiz do projeto execute:
 
-Para iniciar seu banco local
-```
-  sudo service mongod start
-```
-
 Para iniciar o projeto
-```
-  npm run start
+``` 
+npm run start:local
 ```
 
 O projeto ira ser executado na porta `http://localhost:5050/`.
@@ -49,13 +46,13 @@ Execute:
 
 ## 📦 Documentação
 
-[Diagrama de classes](https://drive.google.com/file/d/1Ph5pmn-KZJILFRX_DQYLz5iVHq3gcw2D/view?usp=sharing)
-
 [Arquitetura do projeto](./docs/ARCHITECTURE.MD)
 
-Swegger do projeto WIP....
-Diagrama arquitetura do projeto WIP....
+Swegger do projeto: 
+- Inicia aplicação local: `npm run start:local`
+- Visite a rota: `http://localhost:5050/api-docs/`
 
+[Diagrama de classes](https://drive.google.com/file/d/1Ph5pmn-KZJILFRX_DQYLz5iVHq3gcw2D/view?usp=sharing)
 
 ## 🎁 Melhorias?
 
