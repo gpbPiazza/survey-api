@@ -1,8 +1,8 @@
-# Arquitetura da Clean-API
+# Arquitetura da Survey-API
 
 ## Sumário
 
-- [Arquitetura da Clean-API]()
+- [Arquitetura da Survey-API]()
   - [Sumário](#sumário)
   - [Motivo](#motivo)
   - [Organização](#organização)
