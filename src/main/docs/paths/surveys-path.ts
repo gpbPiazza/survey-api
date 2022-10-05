@@ -23,5 +23,32 @@ export const surveysPath = {
         $ref: '#/components/forbidden'
       }
     }
+  },
+  post: {
+    security: [{
+      apiKeyAuth: []
+    }],
+    tags: ['Surveys'],
+    summary: 'API to create one survey',
+    requestBody: {
+      content: {
+        'application/json': {
+          schema: {
+            $ref: '#/schemas/postSurveyParams'
+          }
+        }
+      }
+    },
+    responses: {
+      204: {
+        description: 'sucess'
+      },
+      400: {
+        $ref: '#/components/badRequest'
+      },
+      403: {
+        $ref: '#/components/forbidden'
+      }
+    }
   }
 }
